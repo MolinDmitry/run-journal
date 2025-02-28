@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"></html>
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация нового пользователя</title>
+</head>
+<body>
+
+    <h1>Регистрация</h1>
+
+    <form method = "POST" th:action = "@{/register}" id = "regForm">
+        <label for = "username">Username: </label>
+        <input type = "text" name = "username" /> <br>
+        
+        <label for = "password">Password: </label>
+        <input type = "text" name = "password" /> <br>
+        
+        <label for = "firstName">Имя: </label>
+        <input type = "text" name = firstName  /> <br>
+
+        <label for = "lastName">Фамилия: </label>
+        <input type = "text" name = lastName  /> <br>
+
+        <label for = "yearOfBirth">Год рождения: </label>
+        <input type = "text" name = yearOfBirth  /> <br>
+
+        <label for = "sex">Пол: </label>
+        <input type = "text" name = sex  /> <br>
+        
+        <label for = "city">City: </label>
+        <input type = "text" name = city /> <br>
+
+        <label for = "userHeight">Рост, см: </label>
+        <input type = "text" name = userHeight /> <br>
+
+        <label for = "userWeight">Вес, кг: </label>
+        <input type = "text" name = userWeight /> <br>
+
+        <button>Зарегистрироваться</button>
+    </form>
+    
+</body>
+</html>

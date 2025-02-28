@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"></html>
+<head>
+    <meta charset="UTF-8">
+    <title>Страница входа</title>
+</head>
+<body>
+    <div th:if="${param.error}">
+        Неправильное имя пользователя и пароль.</div>
+    <div th:if="${param.logout}">
+        Вы вышли из системы</div>
+    <h1>Вход в RunJournal</h1>
+    <form method ="POST" th:action="@{/login}">
+        <label for = "username">Имя пользователя: </label>
+        <input type = "text" name = "username"> <br>
+        
+        <label for = "password">Пароль: </label>
+        <input type = "password" name = "password"> <br>
+
+        <input type = "submit" value = "Войти">
+    </form>
+    <div>Не зарегистрированы? <a href="register">Создать аккаунт</a></div>
+
+    
+</body>
+</html>

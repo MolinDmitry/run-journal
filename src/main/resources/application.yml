@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: run-journal
+  datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/run_journal_db
+        username: run_journal
+        password: 'Yt$L0nG'
+  sql:
+      init:
+          mode: always
+  jpa:
+      database: postgresql
+      show-sql: false
+      hibernate:
+          ddl-auto: update
