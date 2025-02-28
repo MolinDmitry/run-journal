@@ -1,5 +1,7 @@
 package ru.project.runjournal.run_journal;
 
+import java.util.Optional;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -52,9 +54,9 @@ public class SecurityConfig {
    @Bean
    public UserDetailsService userDetailsService(UsersRepository usersRepo){
         return username->{
-            Users user = usersRepo.findByUsername(username);
-            if (user != null) {
-                return user;
+            Optional<Users> user = usersRepo.findByUsername(username);
+            if (user.isPresent()) {
+                return user.get();
             }
             else{
                 throw new UsernameNotFoundException("User /'"+username+"/' not found");
@@ -81,7 +83,7 @@ public class SecurityConfig {
     )
     .formLogin(formLogin -> formLogin
                 .loginPage("/login")
-                .defaultSuccessUrl("/activities")
+                .defaultSuccessUrl("/")
                 .permitAll()
             )
             .rememberMe(Customizer.withDefaults());

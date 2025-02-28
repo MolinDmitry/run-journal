@@ -31,6 +31,7 @@ public class Users implements UserDetails{
     private Long id;
     private final String username;
     private final String password;
+    private final String emailString;
     private final String firstName;
     private final String lastName;
     private final Short  yearOfBirth;

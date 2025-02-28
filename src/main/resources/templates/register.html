@@ -3,41 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <title>Регистрация нового пользователя</title>
+    <style>
+        body {
+	        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            font-size: 15px;
+        }
+        
+        td{
+            border-radius: 3px;
+            border: solid 0px silver;            
+        } 
+        table{
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .fieldLabel{
+            width: 100%;
+            padding-top: 10px; 
+            padding-bottom: 5px;
+            font-weight: bold;            
+        }
+
+        .fieldInput{
+            width:100%;
+            border-radius: 5px;
+            border: solid 1px silver;
+            height:28px;
+        }
+
+        .registerButton{
+            width: 100%;
+            background: rgb(17, 16, 43);
+            color:white;
+            border-radius: 5px;             
+            border: solid 1px rgb(17, 16, 43); 
+            padding-top: 15px; 
+            padding-bottom: 15px;
+            font-size: 15px; 
+        }
+
+        .fieldInputComment{
+            width:100%;
+            padding-top: 3px; 
+            padding-bottom: 0px;
+            color:rgb(100, 100, 100);
+            font-size: 13px;
+        }
+        .errorfield{
+            padding-top: 25px; 
+            padding-bottom: 25px;
+            padding-left: 15px; 
+            padding-right: 15px;
+            background: rgb(255,235,233); 
+            border: solid 1px rgb(245, 177, 175);
+            text-align: left;
+        }
+
+        
+    </style>
 </head>
 <body>
+    <div style="text-align: right; padding-top: 10px; padding-bottom: 10px; padding-right: 30px; color: rgb(100, 100, 100);">
+        Уже есть аккаунт? <a href="login" style = "color: rgb(100, 100, 100);">Войти -></a>
+    </div>
+    <table>
+        <tr th:if="${param.error_password_check}">                
+            <td class = "errorfield">ВНИМАНИЕ! Введенные пароли не совпадают!</td>           
+        </tr>       
+        <tr th:if="${param.error_user_is_exist}">                
+            <td class = "errorfield">ВНИМАНИЕ! Пользователь с таким именем уже существует! </td>           
+        </tr>  
+        <tr>                
+                <td><h2>Создайте аккаунт на RunJournal</h2></td>           
+            </tr>
+            <tr>                
+                <td>
+                    <form method = "POST" th:action = "@{/register}" id = "regForm">
+                        <div class = "fieldLabel">Имя пользователя*:</div>
+                        <input type = "text" name = "username" class ="fieldInput"/><br>
+                        <div class = "fieldInputComment">Только латинские буквы и цифры</div>
+                        
+                        <div class = "fieldLabel">Пароль*: </div>
+                        <input type = "password" name = "password" class ="fieldInput"/> <br>
+                        <div class = "fieldInputComment">Не менее 8 символов</div>
 
-    <h1>Регистрация</h1>
+                        <div class = "fieldLabel">Повторите пароль*: </div>
+                        <input type = "password" name = "rep_password" class ="fieldInput"/> <br>
+                
+                        <div class = "fieldLabel">e-mail: </div>
+                        <input type = "text" name = "emailString" class ="fieldInput"/> <br>
+                        
+                        <div class = "fieldLabel">Имя*: </div>
+                        <input type = "text" name = firstName  class ="fieldInput"/> <br>
+                
+                        <div class = "fieldLabel">Фамилия: </div>
+                        <input type = "text" name = lastName  class ="fieldInput"/> <br>
+                
+                        <div class = "fieldLabel">Год рождения: </div>
+                        <input type = "number" name = yearOfBirth class ="fieldInput"/> <br>
+                
+                        <div class = "fieldLabel">Пол: </div>
+                        <select name = sex  class ="fieldInput" style = "background: white; height: 30px;">
+                            <option>мужской</option>
+                            <option>женский</option>
+                        </select>
+                        <br>
+                        
+                        <div class = "fieldLabel">City: </div>
+                        <input type = "text" name = city class ="fieldInput"/> <br>
+                
+                        <div class = "fieldLabel">Рост, см: </div>
+                        <input type = "number" name = userHeight class ="fieldInput"/> <br>
+                
+                        <div class = "fieldLabel">Вес, кг: </div>
+                        <input type = "number" name = userWeight class ="fieldInput"/> <br>
+                        <div style="padding-top: 30px;"></div>
+                        <button class ="registerButton">Создать аккаунт</button>
+                    </form>
 
-    <form method = "POST" th:action = "@{/register}" id = "regForm">
-        <label for = "username">Username: </label>
-        <input type = "text" name = "username" /> <br>
+                </td>           
+            </tr>
+            
         
-        <label for = "password">Password: </label>
-        <input type = "text" name = "password" /> <br>
-        
-        <label for = "firstName">Имя: </label>
-        <input type = "text" name = firstName  /> <br>
-
-        <label for = "lastName">Фамилия: </label>
-        <input type = "text" name = lastName  /> <br>
-
-        <label for = "yearOfBirth">Год рождения: </label>
-        <input type = "text" name = yearOfBirth  /> <br>
-
-        <label for = "sex">Пол: </label>
-        <input type = "text" name = sex  /> <br>
-        
-        <label for = "city">City: </label>
-        <input type = "text" name = city /> <br>
-
-        <label for = "userHeight">Рост, см: </label>
-        <input type = "text" name = userHeight /> <br>
-
-        <label for = "userWeight">Вес, кг: </label>
-        <input type = "text" name = userWeight /> <br>
-
-        <button>Зарегистрироваться</button>
-    </form>
+        <tr style="height:100px"></tr>
+    </table>
     
 </body>
 </html>

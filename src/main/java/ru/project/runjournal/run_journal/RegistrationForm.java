@@ -13,10 +13,12 @@ import lombok.Data;
 public class RegistrationForm {
     private String username;
     private String password;
+    private String rep_password;
+    private String emailString;
     private String firstName;
     private String lastName;
     private Short  yearOfBirth;
-    private Byte sex; // 0 - женский, 1 - мужской
+    private String sex;
     private String city;
     private Short userWeight; // кг
     private Short userHeight; // см
@@ -40,13 +42,15 @@ public class RegistrationForm {
                         boolean credentialsNonExpired,
                         boolean accountEnabled
     ){
+        Byte sex_code = this.sex.equals("мужской") ? (byte)1: (byte)0;
         return new Users(
             username, 
             passwordEncoder.encode(password),
+            emailString,
             firstName,
             lastName,
             yearOfBirth,
-            sex,
+            sex_code,
             city,
             userWeight,
             userHeight,

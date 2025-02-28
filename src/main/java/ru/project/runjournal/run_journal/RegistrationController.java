@@ -43,13 +43,24 @@ public class RegistrationController {
      */
     @PostMapping
     public String processRegistrationForm(RegistrationForm regForm){
-        usersRepo.save(regForm.toUser(passEncoder,
+        if (regForm.getPassword().equals(regForm.getRep_password()))
+        {
+            if (usersRepo.findByUsername(regForm.getUsername()).isPresent()) return "redirect:register?error_user_is_exist";
+            else{
+                usersRepo.save(regForm.toUser(passEncoder,
                                     "ROLE_USER",
                                     true,
                                     true,
                                     true,
                                     true));        
-        return "redirect:activities";
+            return "redirect:login";
+            }            
+        }
+        else{
+            return "redirect:register?error_password_check";
+        }
+        
+        
     }
 
 }
