@@ -3,6 +3,7 @@ package ru.project.runjournal.run_journal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +30,9 @@ public class ActivitiesController {
     
 
     @ModelAttribute
-    public void addUserDataToModel(Model model){
-        model.addAttribute("currentUsername", "dmitry");
-        model.addAttribute("currentFirstName", "Дмитрий");
+    public void addUserDataToModel(@AuthenticationPrincipal Users currentUser, Model model){
+        model.addAttribute("currentUsername", currentUser.getUsername());
+        model.addAttribute("currentFirstName", currentUser.getFirstName());
     }
 
     @ModelAttribute(name ="activityList")
