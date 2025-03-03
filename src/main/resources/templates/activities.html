@@ -3,12 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <title>Журнал тренировок пользователя</title>
+    <style>
+        body {
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            font-size: 15px;
+        }
+        
+        td{
+            border-radius: 3px;
+            border: solid 1px silver;            
+        } 
+        table{
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .addingActivity{
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-right: 15px;
+            color: rgb(100, 100, 100);
+            text-decoration: none;
+        }
+        .journalHeader{
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-left: 15px;
+            font-size: 24px;
+            font-weight: bold;            
+        }
+        .activityDate{
+            padding-top: 10px;
+            padding-bottom: 5px;
+            padding-left: 15px;
+                        
+        }
+        .activityCaption{
+            padding-top: 10px;
+            padding-bottom: 5px;
+            padding-left: 15px;
+            font-weight: bold;                        
+        }
+        .activityType{
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;                       
+        }
+
+        .colorRow{
+            height: 15px; 
+            background: rgb(245, 245, 245);                              
+        }
+        .detailsButton{
+            background: rgb(17, 16, 43);
+            color:white;
+            border-radius: 5px;             
+            border: solid 1px rgb(17, 16, 43); 
+            padding-top: 7px; 
+            padding-bottom: 7px;
+            padding-left: 10px; 
+            padding-right: 10px;
+            font-size: 15px; 
+        }
+
+    </style>
 </head>
 <body>
+    <div style="text-align: right; padding-top: 10px; padding-bottom: 10px; padding-right: 100px; color: rgb(100, 100, 100);">
+        <span th:text="${currentUsername}">Username</span><br>
+        <span th:text="${currentFirstName}">Имя</span>
+    </div>
+    <table>
+        <tr>
+            <td style="text-align: right; border: solid 0px;"><a href="addactivity" class="addingActivity"> Добавить тренировку >>></a><hr></td></tr>
+        <tr><td style="border: solid 0px;">
+            <div class="journalHeader">Журнал тренировок</div><hr>
+            </td>
+        </tr>
+    </table>
 
-    <h1>Журнал тренировок</h1>
+    <table style="padding-top: 25px;" th:each="activity:${activityList}">
+        <tr><td colspan="3" style="border: solid 0px;">
+            <div class="activityDate" th:text="${activity.activityDate}">Дата</div>
+            </td>
+        </tr>
+        <tr><td colspan="3" class="colorRow" style = "height: 2px;"></td></tr>
+        <tr><td colspan="3" style="border: solid 0px;">
+            <div class="activityCaption" th:text="${activity.activityCaption}">Название</div>
+            </td>
+        </tr>
+        <tr>
+            <td><div class="activityType" th:text="${activity.activityType}">Типг</div></td>
+            <td><div class="activityType" th:text="${activity.activityDuration}">Длительность</div></td>
+            <td><div class="activityType" th:text="${activity.activityDistance}">Дистанция</div></td>
+        </tr>
+        <tr><td colspan="3" class="colorRow"></td></tr>
+    </tr>
+    <tr><td colspan="3" style="border: solid 0px;">
+        <div style="text-align: right;"><button th:onclick="window.location.href = 'activitydetails&id=' + ${activity.activityId}" class="detailsButton">Подробнее >>></button></div>    
+    </td>
+    </tr>
+    <tr><td colspan="3" class="colorRow"></td></tr>
+    </table>
 
-    <button onclick="window.location.href = 'addactivity'">Добавить тренировку</button>   
+    
+    
+    
     
 </body>
 </html>

@@ -3,12 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <title>Добавление новой тренировки</title>
+    <style>
+        body {
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            font-size: 15px;
+        }
+        
+        td{
+            border-radius: 3px;
+            border: solid 0px silver;            
+        } 
+        table{
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .goToRunJournal{
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-left: 15px;
+            color: rgb(100, 100, 100);
+            font-size: 18px;
+            font-weight: bold;   
+            text-decoration: none;
+        }
+        .journalHeader{
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-left: 15px;
+            font-size: 24px;
+            font-weight: bold;            
+        }
+        .fieldLabel{
+            width: 100%;
+            padding-top: 15px; 
+            padding-bottom: 5px;
+            font-weight: bold;            
+        }
+        .fieldInput{
+            width:100%;
+            border-radius: 5px;
+            border: solid 1px silver;
+            height:28px;
+        }
+        .commentInput{
+            width:100%;
+            border-radius: 5px;
+            border: solid 1px silver;
+        }
+        .sendButton{
+            width: 100%;
+            background: rgb(17, 16, 43);
+            color:white;
+            border-radius: 5px;             
+            border: solid 1px rgb(17, 16, 43); 
+            padding-top: 15px; 
+            padding-bottom: 15px;
+            font-size: 15px; 
+        }
+
+    </style>
+    
 </head>
 <body>
+    <div style="text-align: right; padding-top: 10px; padding-bottom: 10px; padding-right: 100px; color: rgb(100, 100, 100);">
+        Username<br>
+        Имя
+    </div>
+    <table>
+        <tr>
+            <td style="text-align: left; border: solid 0px;"><a href="activities" class="goToRunJournal"> RunJournal</a><hr></td></tr>
+        <tr><td style="border: solid 0px;">
+            <div class="journalHeader">Новая тренировка</div><hr>
+            </td>
+        </tr>
+    </table>
 
-    <h1>Добавление новой тренировки</h1>
+    <table>
+        <tr>
+            <td>
+                <form enctype="multipart/form-data" method = "POST" th:action = "@{/addactivity}" id = "activityForm">
+                    <div class = "fieldLabel">Тип тренировки: </div>
+                    <select name = activityType  class ="fieldInput" style = "background: white; height: 30px;">
+                        <option>Бег</option>
+                        <option>Хайкинг</option>
+                        <option>Треккинг</option>
+                        <option>Прогулка</option>
+                    </select>
+                    <br>
+                    <div class = "fieldLabel">Комментарий:</div>
+                    <textarea rows="8" name = "activityComment" class="commentInput"></textarea>
+                    
+                    <div class = "fieldLabel">Трек в формате *.gpx: </div>
+                    
+                        <input type="file" name="filename" style="height: 40px;"/>
 
-    <button onclick="window.location.href = 'activities'">Журнал тренировок</button>   
+                    
+                    <div style="padding-top: 30px;"></div>
+                    <button class ="sendButton">Добавить тренировку</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
     
 </body>
 </html>
