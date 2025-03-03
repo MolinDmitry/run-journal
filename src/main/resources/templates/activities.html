@@ -64,6 +64,7 @@
             padding-left: 10px; 
             padding-right: 10px;
             font-size: 15px; 
+            cursor:pointer;
         }
 
     </style>
@@ -100,7 +101,7 @@
         <tr><td colspan="3" class="colorRow"></td></tr>
     </tr>
     <tr><td colspan="3" style="border: solid 0px;">
-        <div style="text-align: right;"><button th:onclick="window.location.href = 'activitydetails&id=' + ${activity.activityId}" class="detailsButton">Подробнее >>></button></div>    
+        <div style="text-align: right;"><button th:onclick="|window.location.href = 'activitydetails?id=${activity.activityId}'|" class="detailsButton">Подробнее >>></button></div>    
     </td>
     </tr>
     <tr><td colspan="3" class="colorRow"></td></tr>
