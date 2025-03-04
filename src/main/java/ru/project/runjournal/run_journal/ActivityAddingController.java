@@ -1,8 +1,6 @@
 package ru.project.runjournal.run_journal;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+
 
 @Controller
 @RequestMapping("/addactivity")
@@ -69,25 +69,10 @@ public class ActivityAddingController {
         System.out.println(activityData.getActivityType());
         System.out.println(activityData.getActivityComment().toString());
         if (!activityData.fileGPX.isEmpty()){
-            System.out.println(activityData.fileGPX.getName());
-            System.out.println(activityData.fileGPX.getOriginalFilename());
-            System.out.println(activityData.fileGPX.getContentType());
-            System.out.println(Long.toString(activityData.fileGPX.getSize()));
-
-            
-            try{
-                InputStream is = activityData.fileGPX.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-                br.lines().forEach(System.out::println);
-            }
-            catch(Exception e){
-                System.out.println(e.getMessage());
-            }
-            
-
+            new GpxProcessor().processGPX(activityData.fileGPX);
         }
         else{
-            System.out.println("файл пустой");
+             System.out.println("файл пустой");
         }
 
         return "redirect:/";
