@@ -67,8 +67,8 @@
 </head>
 <body>
     <div style="text-align: right; padding-top: 10px; padding-bottom: 10px; padding-right: 100px; color: rgb(100, 100, 100);">
-        Username<br>
-        Имя
+        <span th:text="${currentUsername}">Username</span><br>
+        <span th:text="${currentFirstName}">Имя</span>
     </div>
     <table>
         <tr>
@@ -82,13 +82,10 @@
     <table>
         <tr>
             <td>
-                <form enctype="multipart/form-data" method = "POST" th:action = "@{/addactivity}" id = "activityForm">
+                <form enctype="multipart/form-data" method = "POST" th:action = "@{/addactivity}" id = "activityData">
                     <div class = "fieldLabel">Тип тренировки: </div>
-                    <select name = activityType  class ="fieldInput" style = "background: white; height: 30px;">
-                        <option>Бег</option>
-                        <option>Хайкинг</option>
-                        <option>Треккинг</option>
-                        <option>Прогулка</option>
+                    <select name = activityType  class ="fieldInput" style = "background: white; height: 30px;">    
+                        <option th:each="activityType:${activityTypesList}" th:text="${activityType}">Тип тренировки</option>
                     </select>
                     <br>
                     <div class = "fieldLabel">Комментарий:</div>
