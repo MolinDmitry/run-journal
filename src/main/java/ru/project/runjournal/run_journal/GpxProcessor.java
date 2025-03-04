@@ -19,17 +19,42 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class GpxProcessor {
 
+        @Data
+        @AllArgsConstructor
+        private class TrackPoint{
+            private double latitude;
+            private double longitude;
+            private String time;
+            private double speed;
+            private double cadence;
+            private short hr;
+        }
+
     private class XMLHandler extends DefaultHandler{
         private String lastElementName;
+        boolean trackPointFlag;
+        TrackPoint curTrackPoint;
+        
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException{
             lastElementName = qName;
             
             if (qName.equals("trkpt")){
+                trackPointFlag = true;
                 String latitude = attributes.getValue("lat");
                 String longitude = attributes.getValue("lon");
-                System.out.println("trkpt: lat=" + latitude + " lon=" + longitude);
+                curTrackPoint = new TrackPoint(Double.parseDouble(latitude), Double.parseDouble(longitude), "0", 0, 0, (short)0);
+                
+                //System.out.println("trkpt: lat=" + latitude + " lon=" + longitude);
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException{
+            if (qName.equals("trkpt")) {
+                trackPointFlag=false;
+                System.out.println(curTrackPoint.toString());
             }
         }
 
@@ -37,19 +62,23 @@ public class GpxProcessor {
         public void characters(char[] ch, int start, int length) throws SAXException{
             String information = new String(ch,start,length);
             information = information.replace("\n", "").trim();
-            if (!information.isEmpty()){
+            if (!information.isEmpty() && trackPointFlag){
                 switch (lastElementName) {
                     case "time":
-                        System.out.println("time: " + information);
+                        curTrackPoint.setTime(information);
+                        //System.out.println("time: " + information);
                         break;
                     case "ns3:speed":
-                        System.out.println("ns3:speed: " + information);
+                        curTrackPoint.setSpeed(Double.parseDouble(information));
+                        //System.out.println("ns3:speed: " + information);
                         break;
                     case "ns3:cad":
-                        System.out.println("ns3:cad: " + information);
+                        curTrackPoint.setCadence(Double.parseDouble(information));
+                        //System.out.println("ns3:cad: " + information);
                         break;
                     case "ns3:hr":
-                        System.out.println("ns3:hr: " + information);
+                        curTrackPoint.setHr(Short.parseShort(information));
+                        //System.out.println("ns3:hr: " + information);
                         break;
                 
                     default:
@@ -60,16 +89,7 @@ public class GpxProcessor {
 
     }
 
-    @Data
-    @AllArgsConstructor
-    private class TrackPoint{
-        private double latitude;
-        private double longitude;
-        private String time;
-        private double speed;
-        private double cadence;
-        private short hr;
-    }
+    
 
     
 
