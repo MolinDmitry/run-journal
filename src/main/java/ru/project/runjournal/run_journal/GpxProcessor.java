@@ -6,6 +6,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -18,6 +20,7 @@ import javax.xml.parsers.SAXParserFactory;
 /**
  * @breif Обрабатывает файл формата GPX 
  */
+@Slf4j
 public class GpxProcessor {
 
     private List<TrackPoint> trkpntList;
@@ -68,7 +71,8 @@ public class GpxProcessor {
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException{
             String information = new String(ch,start,length);
-            information = information.replace("\n", "").trim();
+            information = information.replace("\n", "").replace(",", ".")
+            .replace(" ", "").trim();
             if (!information.isEmpty() && trackPointFlag){
                 switch (lastElementName) {
                     case "time":
@@ -111,7 +115,8 @@ public class GpxProcessor {
 
             }
             catch(Exception e){
-                System.out.println(e.getMessage());
+                trkpntList = null;
+                log.error("Error XML parsing", e);
             }
             return trkpntList;        
 

@@ -15,9 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 
-
+@Slf4j
 @Controller
 @RequestMapping("/addactivity")
 public class ActivityAddingController {
@@ -64,14 +65,22 @@ public class ActivityAddingController {
      * @brief Обрабатывает POST запрос от страницы добавления новой тренировки
      * @return Возвращает перенаправление на страницу журнала тренировок
      */
+    @SuppressWarnings("unused")
     @PostMapping
     public String processActivityAdding(NewActivityData activityData){
         System.out.println(activityData.getActivityType());
         System.out.println(activityData.getActivityComment().toString());
         if (!activityData.fileGPX.isEmpty()){
-            List<TrackPoint> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
-            trackPointsList.stream().forEach(System.out::println);
-        }
+                List<TrackPoint> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
+                if (trackPointsList != null){
+                    trackPointsList.stream().forEach(System.out::println);
+
+                }
+                else{
+                    log.info("Null trackPointsList is obtained after processing");
+                    return "redirect:addactivity?gpxprocessingerror";
+                }                
+            }
         else{
             return "redirect:addactivity?gpxisnot";
         }
