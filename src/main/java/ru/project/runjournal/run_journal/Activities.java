@@ -34,4 +34,5 @@ public class Activities{
     private final int activityDuration; // длительность в секундах
     private final double activityDistance; // дистанция в км
     private final long trackId;
+    private final long userId;
 }

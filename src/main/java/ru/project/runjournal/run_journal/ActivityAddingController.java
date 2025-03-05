@@ -4,6 +4,7 @@ package ru.project.runjournal.run_journal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,9 @@ public class ActivityAddingController {
 
     private final ActivitiesRepository activitiesRepo;
     private final TrackPointsRepository trackPointsRepo;
+    private long curUserId;
 
+    @Autowired
     public ActivityAddingController(ActivitiesRepository activitiesRepository, TrackPointsRepository trackPointsRepository){
         this.activitiesRepo = activitiesRepository;
         this.trackPointsRepo = trackPointsRepository;
@@ -57,6 +60,7 @@ public class ActivityAddingController {
     public void addUserDataToModel(@AuthenticationPrincipal Users currentUser, Model model){
         model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentFirstName", currentUser.getFirstName());
+        this.curUserId = currentUser.getId();
     }
 
     @ModelAttribute void createActivityTypeAttribute(Model model){
@@ -98,11 +102,22 @@ public class ActivityAddingController {
                     activityData.getActivityComment(),
                     0,
                     0.0,
-                    trackPointsList.get(0).getTrackId());
-                    activitiesRepo.save(curActivity);
-                    trackPointsRepo.saveAll(trackPointsList);
+                    trackPointsList.get(0).getTrackId(),
+                    this.curUserId
+                    );
+                    List<Activities> existingActivities = activitiesRepo.findByTrackIdAndUserId(trackPointsList.get(0).getTrackId(), curUserId);
+                    existingActivities.stream().forEach(System.out::println);
+                    if (existingActivities.isEmpty()){
+                        activitiesRepo.save(curActivity);
+                        trackPointsRepo.saveAll(trackPointsList);
+                    }
+                    else
+                    {
+                        return "redirect:addactivity?existingactivityerror";
+                    }
+                    
 
-                    System.out.println(curActivity.toString());
+                    //System.out.println(curActivity.toString());
                 }
                 else{
                     log.info("Null trackPointsList is obtained after processing");
