@@ -63,6 +63,12 @@ public class ActivityAddingController {
 
     /**
      * @brief Обрабатывает POST запрос от страницы добавления новой тренировки
+     * 
+     * - Принимает первоначальные данные о тренировке и файл формата GPX. 
+     * - Сохраняет данные о тренировке в БД в таблицы activities и trackpoints
+     * - Каждая запись в activities содержит id трека
+     *   
+     * 
      * @return Возвращает перенаправление на страницу журнала тренировок
      */
     @SuppressWarnings("unused")
@@ -71,7 +77,7 @@ public class ActivityAddingController {
         System.out.println(activityData.getActivityType());
         System.out.println(activityData.getActivityComment().toString());
         if (!activityData.fileGPX.isEmpty()){
-                List<TrackPoint> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
+                List<TrackPoints> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
                 if (trackPointsList != null){
                     trackPointsList.stream().forEach(System.out::println);
 

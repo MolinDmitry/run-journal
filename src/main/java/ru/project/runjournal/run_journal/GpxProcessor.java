@@ -23,14 +23,14 @@ import javax.xml.parsers.SAXParserFactory;
 @Slf4j
 public class GpxProcessor {
 
-    private List<TrackPoint> trkpntList;
+    private List<TrackPoints> trkpntList;
 
     private class XMLHandler extends DefaultHandler{
         private String lastElementName;
         boolean trackPointFlag;
         boolean isFirstPtrackPoint;
         long curTrackId;
-        TrackPoint curTrackPoint;
+        TrackPoints curTrackPoint;
 
         public void setFirstTrackPointFlag(){
             this.isFirstPtrackPoint = true;
@@ -45,7 +45,7 @@ public class GpxProcessor {
                 trackPointFlag = true;
                 String latitude = attributes.getValue("lat");
                 String longitude = attributes.getValue("lon");
-                curTrackPoint = new TrackPoint(
+                curTrackPoint = new TrackPoints(
                     Double.parseDouble(latitude),
                     Double.parseDouble(longitude), 
                     LocalDateTime.of(1970,1,1,0,0), 
@@ -79,13 +79,28 @@ public class GpxProcessor {
                         curTrackPoint.setTime(LocalDateTime.parse(information.replace("Z", "")));
                         break;
                     case "ns3:speed":
-                        curTrackPoint.setSpeed(Float.parseFloat(information));
+                        try{
+                            curTrackPoint.setSpeed(Float.parseFloat(information));
+                        }catch(Exception e){
+                            log.info("Error during speed parsing. Speed is set to 0");
+                            curTrackPoint.setSpeed(0);
+                        }                        
                         break;
                     case "ns3:cad":
-                        curTrackPoint.setCadence(Float.parseFloat(information));
+                        try{
+                            curTrackPoint.setCadence(Float.parseFloat(information));
+                        }catch(Exception e){
+                            log.info("Error during cadence parsing. Cadence is set to 0");
+                            curTrackPoint.setCadence(0);
+                        }                        
                         break;
                     case "ns3:hr":
-                        curTrackPoint.setHr(Short.parseShort(information));
+                        try {
+                            curTrackPoint.setHr(Short.parseShort(information));                        
+                        } catch (Exception e) {
+                            log.info("Error during HR parsing. HR is set to 0");
+                            curTrackPoint.setHr((short)0);
+                        }                        
                         break;                
                     default:
                         break;
@@ -94,15 +109,20 @@ public class GpxProcessor {
         }
 
     }
-
-    public List<TrackPoint> processGPX(MultipartFile file){
+    /**
+     * @brief Обрабатывает файл формата GPX
+     * @param file Файл формата GPX
+     * @return Список точек трека в виде объектов TrackPoint c id трека. 
+     * При возникновении ошибок в процессе обработки возвращает пустой список
+     */
+    public List<TrackPoints> processGPX(MultipartFile file){
 
             System.out.println(file.getName());
             System.out.println(file.getOriginalFilename());
             System.out.println(file.getContentType());
             System.out.println(Long.toString(file.getSize()));
 
-            trkpntList = new ArrayList<TrackPoint>();
+            trkpntList = new ArrayList<TrackPoints>();
             
             try{
                 InputStream is = file.getInputStream();

@@ -5,9 +5,13 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * @brief Сущность точки трека
+ */
+
 @Data
 @AllArgsConstructor
-public class TrackPoint {
+public class TrackPoints {
     private double latitude;
     private double longitude;
     private LocalDateTime time;
