@@ -81,6 +81,16 @@ public class ActivityAddingController {
                 if (trackPointsList != null){
                     trackPointsList.stream().forEach(System.out::println);
 
+                    // формируем данные для тренировки для сохранения в БД
+
+                    Activities curActivity = new Activities(trackPointsList.get(0).getTime(),
+                    activityData.getActivityType(),
+                    "Название тренировки",
+                    activityData.getActivityComment(),
+                    0,
+                    0.0,
+                    trackPointsList.get(0).getTrackId());
+                    System.out.println(curActivity.toString());
                 }
                 else{
                     log.info("Null trackPointsList is obtained after processing");
