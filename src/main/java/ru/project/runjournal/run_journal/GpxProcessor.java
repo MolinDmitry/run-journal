@@ -47,10 +47,7 @@ public class GpxProcessor {
                 String longitude = attributes.getValue("lon");
                 curTrackPoint = new TrackPoints(
                     Double.parseDouble(latitude),
-                    Double.parseDouble(longitude), 
-                    LocalDateTime.of(1970,1,1,0,0), 
-                    0, 0, (short)0,
-                    0L
+                    Double.parseDouble(longitude)
                     );
             }
         }
