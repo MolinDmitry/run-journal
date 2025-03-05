@@ -44,6 +44,7 @@ public class ActivityAddingController {
 
     private enum ActivityType {
         RUNNING,
+        RACE,
         TRAILRUNNING,
         HIKING,
         TREKKING,
@@ -86,27 +87,22 @@ public class ActivityAddingController {
     @SuppressWarnings("unused")
     @PostMapping
     public String processActivityAdding(NewActivityData activityData){
-        System.out.println(activityData.getActivityType());
-        System.out.println(activityData.getActivityComment().toString());
         if (!activityData.fileGPX.isEmpty()){
                 List<TrackPoints> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
                 if (trackPointsList != null){
-                    trackPointsList.stream().forEach(System.out::println);
-
                     // формируем данные для тренировки для сохранения в БД
 
                     Activities curActivity = new Activities(
-                    trackPointsList.get(0).getTime(),
+                    ActivityDataProcessor.getActivityStartTime(trackPointsList),
                     activityData.getActivityType(),
-                    "Название тренировки",
+                    ActivityDataProcessor.getActivityCaption(trackPointsList, activityData.getActivityType()),
                     activityData.getActivityComment(),
-                    0,
-                    0.0,
+                    ActivityDataProcessor.getActivityDuration(trackPointsList),
+                    ActivityDataProcessor.getActivityDistance(trackPointsList),
                     trackPointsList.get(0).getTrackId(),
                     this.curUserId
                     );
                     List<Activities> existingActivities = activitiesRepo.findByTrackIdAndUserId(trackPointsList.get(0).getTrackId(), curUserId);
-                    existingActivities.stream().forEach(System.out::println);
                     if (existingActivities.isEmpty()){
                         activitiesRepo.save(curActivity);
                         trackPointsRepo.saveAll(trackPointsList);
@@ -115,9 +111,6 @@ public class ActivityAddingController {
                     {
                         return "redirect:addactivity?existingactivityerror";
                     }
-                    
-
-                    //System.out.println(curActivity.toString());
                 }
                 else{
                     log.info("Null trackPointsList is obtained after processing");
