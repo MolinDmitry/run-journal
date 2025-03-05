@@ -61,6 +61,16 @@
             padding-bottom: 15px;
             font-size: 15px; 
         }
+        .errorfield{
+            padding-top: 25px; 
+            padding-bottom: 25px;
+            padding-left: 15px; 
+            padding-right: 15px;
+            background: rgb(255,235,233); 
+            border: solid 1px rgb(245, 177, 175);
+            text-align: center;
+            height: 40px;
+        }
 
     </style>
     
@@ -70,7 +80,14 @@
         <span th:text="${currentUsername}">Username</span><br>
         <span th:text="${currentFirstName}">Имя</span>
     </div>
-    <table>
+    <table>        
+        <tr th:if="${param.gpxisnot}" class="errorfield"><td>
+            ВНИМАНИЕ! Файл GPX не выбран или пустой.
+        </td></tr>
+        <tr>
+        <tr th:if="${param.gpxprocessingerror}" class="errorfield"><td>
+                ВНИМАНИЕ! Ошибка обработки данных GPX. Файл имеет неправильный формат.
+        </td></tr>
         <tr>
             <td style="text-align: left; border: solid 0px;"><a href="activities" class="goToRunJournal"> RunJournal</a><hr></td></tr>
         <tr><td style="border: solid 0px;">

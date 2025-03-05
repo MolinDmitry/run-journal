@@ -69,12 +69,12 @@ public class ActivityAddingController {
         System.out.println(activityData.getActivityType());
         System.out.println(activityData.getActivityComment().toString());
         if (!activityData.fileGPX.isEmpty()){
-            new GpxProcessor().processGPX(activityData.fileGPX);
+            List<TrackPoint> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
+            trackPointsList.stream().forEach(System.out::println);
         }
         else{
-             System.out.println("файл пустой");
+            return "redirect:addactivity?gpxisnot";
         }
-
         return "redirect:/";
     }
 }
