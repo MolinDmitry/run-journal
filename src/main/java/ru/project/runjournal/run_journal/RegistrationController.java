@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/register")
 public class RegistrationController {
 
-    @SuppressWarnings("unused")
     private final UsersRepository usersRepo;
-    @SuppressWarnings("unused")
     private final PasswordEncoder passEncoder;
 
     @Autowired

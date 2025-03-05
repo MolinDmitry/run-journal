@@ -23,6 +23,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/addactivity")
 public class ActivityAddingController {
 
+    private final ActivitiesRepository activitiesRepo;
+    private final TrackPointsRepository trackPointsRepo;
+
+    public ActivityAddingController(ActivitiesRepository activitiesRepository, TrackPointsRepository trackPointsRepository){
+        this.activitiesRepo = activitiesRepository;
+        this.trackPointsRepo = trackPointsRepository;
+    }
+
     @Data
     @AllArgsConstructor
     private class NewActivityData{
@@ -83,13 +91,17 @@ public class ActivityAddingController {
 
                     // формируем данные для тренировки для сохранения в БД
 
-                    Activities curActivity = new Activities(trackPointsList.get(0).getTime(),
+                    Activities curActivity = new Activities(
+                    trackPointsList.get(0).getTime(),
                     activityData.getActivityType(),
                     "Название тренировки",
                     activityData.getActivityComment(),
                     0,
                     0.0,
                     trackPointsList.get(0).getTrackId());
+                    activitiesRepo.save(curActivity);
+                    trackPointsRepo.saveAll(trackPointsList);
+
                     System.out.println(curActivity.toString());
                 }
                 else{
