@@ -93,14 +93,16 @@ public class ActivityAddingController {
                     // формируем данные для тренировки для сохранения в БД
 
                     Activities curActivity = new Activities(
-                    ActivityDataProcessor.getActivityStartTime(trackPointsList),
+                    ActivityDataProcessor.getActivityStartTime(trackPointsList, (byte)0,(byte)0),
                     activityData.getActivityType(),
-                    ActivityDataProcessor.getActivityCaption(trackPointsList, activityData.getActivityType()),
+                    ActivityDataProcessor.getActivityCaption(trackPointsList, activityData.getActivityType(),(byte)3,(byte)0),
                     activityData.getActivityComment(),
                     ActivityDataProcessor.getActivityDuration(trackPointsList),
                     ActivityDataProcessor.getActivityDistance(trackPointsList),
                     trackPointsList.get(0).getTrackId(),
-                    this.curUserId
+                    this.curUserId,
+                    (byte)3,
+                    (byte)0
                     );
                     List<Activities> existingActivities = activitiesRepo.findByTrackIdAndUserId(trackPointsList.get(0).getTrackId(), curUserId);
                     if (existingActivities.isEmpty()){

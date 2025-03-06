@@ -11,11 +11,14 @@ public class ActivityDataProcessor {
     private final static double Rp = 6356.86; //полярный радиус Земли
     private final static double Re = 6378.2; //экваториальный радиус Земли
 
-    public static  LocalDateTime getActivityStartTime(List<TrackPoints> trkPointsList){
-        return trkPointsList.get(0).getTime();
+    public static  LocalDateTime getActivityStartTime(List<TrackPoints> trkPointsList, byte ZoneOffsetHour, byte ZoneOffsetMin){
+        LocalDateTime dt_UTC = trkPointsList.get(0).getTime();
+        long epoch_sec = dt_UTC.toEpochSecond(ZoneOffset.UTC);
+        LocalDateTime dt_local = LocalDateTime.ofEpochSecond(epoch_sec, 0, ZoneOffset.ofHoursMinutes(ZoneOffsetHour, ZoneOffsetMin));
+        return dt_local;
     }
 
-    public static  String getActivityCaption(List<TrackPoints> trkPointsList, String activityType){
+    public static  String getActivityCaption(List<TrackPoints> trkPointsList, String activityType, byte ZoneOffsetHour, byte ZoneOffsetMin){
         boolean mIndicator; // true - мужской род
         String typeRusString = "";
         String timeOfDayString = "";
@@ -73,7 +76,7 @@ public class ActivityDataProcessor {
                 typeRusString = "тренировка";
                 break;
         }
-        LocalDateTime activityStart = ActivityDataProcessor.getActivityStartTime(trkPointsList);
+        LocalDateTime activityStart = ActivityDataProcessor.getActivityStartTime(trkPointsList,ZoneOffsetHour,ZoneOffsetMin);
         int activityHour = activityStart.getHour();
         if (activityHour >=4 && activityHour < 11)
             timeOfDayString = mIndicator ? "Утренний":"Утренняя";

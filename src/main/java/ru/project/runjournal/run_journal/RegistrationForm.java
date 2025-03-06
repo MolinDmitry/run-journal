@@ -54,6 +54,8 @@ public class RegistrationForm {
             city,
             userWeight,
             userHeight,
+            (byte)3,
+            (byte)0,
             userRole,
             accountNonExpired,
             accountNonLocked,

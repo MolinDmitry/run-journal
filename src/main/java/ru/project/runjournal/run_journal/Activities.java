@@ -35,4 +35,6 @@ public class Activities{
     private final double activityDistance; // дистанция в км
     private final long trackId;
     private final long userId;
+    private final Byte timeZoneOffsetHours; // смещение часового пояса -12 ... 12 
+    private final Byte timeZoneOffsetMinuts; // смещение часового пояса 0 ... 59 
 }

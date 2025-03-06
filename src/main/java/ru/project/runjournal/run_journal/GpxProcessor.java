@@ -114,11 +114,6 @@ public class GpxProcessor {
      */
     public List<TrackPoints> processGPX(MultipartFile file){
 
-            System.out.println(file.getName());
-            System.out.println(file.getOriginalFilename());
-            System.out.println(file.getContentType());
-            System.out.println(Long.toString(file.getSize()));
-
             trkpntList = new ArrayList<TrackPoints>();
             
             try{

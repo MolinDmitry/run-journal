@@ -39,6 +39,8 @@ public class Users implements UserDetails{
     private final String city;
     private final Short userWeight; // кг
     private final Short userHeight; // см
+    private final Byte primaryTimeZoneOffsetHours; // смещение в часах основного часового пояса тренировок -12...12
+    private final Byte primaryTimeZoneOffsetMinuts; // смещение в минутах основного часового пояса тренировок 0..59
 
     private final String userRole; // ROLE_USER, ROLE_ADMIN
     private final boolean accountNonExpired; //активный/неактивный аккаунт
