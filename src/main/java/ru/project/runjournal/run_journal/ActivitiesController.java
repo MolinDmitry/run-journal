@@ -18,7 +18,6 @@ import lombok.Data;
 @RequestMapping("/")
 public class ActivitiesController {
 
-    private Long curUserId;
     private final ActivitiesRepository activityRepo;
 
     @Data
@@ -32,7 +31,7 @@ public class ActivitiesController {
         Long activityId;
     }
 
-    @Autowired
+
     public ActivitiesController(ActivitiesRepository activityRepository){
         this.activityRepo = activityRepository;
     } 
@@ -43,13 +42,13 @@ public class ActivitiesController {
     public void addUserDataToModel(@AuthenticationPrincipal Users currentUser, Model model){
         model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentFirstName", currentUser.getFirstName());
-        this.curUserId = currentUser.getId();
+        
     }
 
     @ModelAttribute(name ="activityBDList")
-    public List<ActivityBriefData>  addActivityList(){
+    public List<ActivityBriefData>  addActivityList(@AuthenticationPrincipal Users currentUser){
         List<ActivityBriefData> activityBDList = new ArrayList<>();
-        List<Activities> activityList = activityRepo.findByUserId(this.curUserId);
+        List<Activities> activityList = activityRepo.findByUserIdOrderByActivityDateDesc(currentUser.getId());
         if (!activityList.isEmpty()){
             activityList.stream().forEach(
                 activity -> {
