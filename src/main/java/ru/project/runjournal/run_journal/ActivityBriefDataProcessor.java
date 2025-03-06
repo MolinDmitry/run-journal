@@ -103,7 +103,7 @@ public class ActivityBriefDataProcessor {
     }
 
     /**
-     * @brief 
+     * @brief Конвертирует тип тренировки в русскоязычное нименование
      * @return Строку с русским наименованием типа тренировки
      */
     public static String convertActivityTypeToRUS(Activities activity){
