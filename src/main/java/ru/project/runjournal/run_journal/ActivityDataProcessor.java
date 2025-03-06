@@ -4,21 +4,28 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 /**
- * @brief Предоставляет набор статических методов для обработки данных тренировки
+ * @brief Обрабатывает данные тренировки
  */
 
 public class ActivityDataProcessor {
     private final static double Rp = 6356.86; //полярный радиус Земли
     private final static double Re = 6378.2; //экваториальный радиус Земли
+    private List<TrackPoints> trkPointsList;
+    private String activityType;
 
-    public static  LocalDateTime getActivityStartTime(List<TrackPoints> trkPointsList, byte ZoneOffsetHour, byte ZoneOffsetMin){
+    public ActivityDataProcessor(List<TrackPoints> trkPointsList, String activityType){
+        this.trkPointsList = trkPointsList;
+        this.activityType = activityType;
+    }
+
+    public LocalDateTime getActivityStartTime(byte ZoneOffsetHour, byte ZoneOffsetMin){
         LocalDateTime dt_UTC = trkPointsList.get(0).getTime();
         long epoch_sec = dt_UTC.toEpochSecond(ZoneOffset.UTC);
         LocalDateTime dt_local = LocalDateTime.ofEpochSecond(epoch_sec, 0, ZoneOffset.ofHoursMinutes(ZoneOffsetHour, ZoneOffsetMin));
         return dt_local;
     }
 
-    public static  String getActivityCaption(List<TrackPoints> trkPointsList, String activityType, byte ZoneOffsetHour, byte ZoneOffsetMin){
+    public String getActivityCaption(byte ZoneOffsetHour, byte ZoneOffsetMin){
         boolean mIndicator; // true - мужской род
         String typeRusString = "";
         String timeOfDayString = "";
@@ -76,7 +83,7 @@ public class ActivityDataProcessor {
                 typeRusString = "тренировка";
                 break;
         }
-        LocalDateTime activityStart = ActivityDataProcessor.getActivityStartTime(trkPointsList,ZoneOffsetHour,ZoneOffsetMin);
+        LocalDateTime activityStart = this.getActivityStartTime(ZoneOffsetHour,ZoneOffsetMin);
         int activityHour = activityStart.getHour();
         if (activityHour >=4 && activityHour < 11)
             timeOfDayString = mIndicator ? "Утренний":"Утренняя";
@@ -92,13 +99,13 @@ public class ActivityDataProcessor {
         return timeOfDayString + " " + typeRusString;
     }
 
-    public static int getActivityDuration(List<TrackPoints> trkPointsList){
+    public int getActivityDuration(){
         Long duration_sec = trkPointsList.get(trkPointsList.size()-1).getTime().toEpochSecond(ZoneOffset.UTC) - 
         trkPointsList.get(0).getTime().toEpochSecond(ZoneOffset.UTC);
         return duration_sec.intValue();
     }
 
-    public static double getActivityDistance(List<TrackPoints> trkPointsList){
+    public double getActivityDistance(){
         double fi= trkPointsList.get(0).getLatitude()*Math.PI/180; // широта места тренировки в рад
         double R = Math.cos(fi)*(Re-Rp)+Rp; // радиус Земли на широте тренировки (при допущении формы Земли в виде идеального геоида)
         // аппроксимируем поверхность Земли сферой с радиусом R
@@ -111,7 +118,6 @@ public class ActivityDataProcessor {
             double dLon = (trkPointsList.get(i).getLongitude() - trkPointsList.get(i-1).getLongitude())*sLon;
             distance += Math.sqrt(dLat*dLat + dLon*dLon); 
         }
-
         return distance;
     }
 

@@ -90,18 +90,18 @@ public class ActivityAddingController {
                 List<TrackPoints> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
                 if (trackPointsList != null){
                     // формируем данные для тренировки для сохранения в БД
-
+                    ActivityDataProcessor dataProc = new ActivityDataProcessor(trackPointsList, activityData.getActivityType());
                     Activities curActivity = new Activities(
-                    ActivityDataProcessor.getActivityStartTime(trackPointsList, (byte)0,(byte)0),
-                    activityData.getActivityType(),
-                    ActivityDataProcessor.getActivityCaption(trackPointsList, activityData.getActivityType(),(byte)3,(byte)0),
-                    activityData.getActivityComment(),
-                    ActivityDataProcessor.getActivityDuration(trackPointsList),
-                    ActivityDataProcessor.getActivityDistance(trackPointsList),
-                    trackPointsList.get(0).getTrackId(),
-                    currentUser.getId(),
-                    (byte)3,
-                    (byte)0
+                        dataProc.getActivityStartTime((byte)0,(byte)0),
+                        activityData.getActivityType(),
+                        dataProc.getActivityCaption((byte)3,(byte)0),
+                        activityData.getActivityComment(),
+                        dataProc.getActivityDuration(),
+                        dataProc.getActivityDistance(),
+                        trackPointsList.get(0).getTrackId(),
+                        currentUser.getId(),
+                        (byte)3,
+                        (byte)0
                     );
                     List<Activities> existingActivities = activitiesRepo.findByTrackIdAndUserId(trackPointsList.get(0).getTrackId(), currentUser.getId());
                     if (existingActivities.isEmpty()){
