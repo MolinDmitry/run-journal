@@ -1,6 +1,10 @@
 spring:
   application:
     name: run-journal
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
   datasource:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://localhost:5432/run_journal_db

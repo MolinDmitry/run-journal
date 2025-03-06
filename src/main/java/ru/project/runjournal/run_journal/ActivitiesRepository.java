@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ActivitiesRepository extends CrudRepository<Activities,Long>{
     List<Activities> findByTrackIdAndUserId(long trackId, long userId);
+    List<Activities> findByUserId(long userId);
 
 }

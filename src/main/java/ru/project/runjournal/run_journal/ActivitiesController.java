@@ -3,6 +3,7 @@ package ru.project.runjournal.run_journal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,10 @@ import lombok.Data;
 @Controller
 @RequestMapping("/")
 public class ActivitiesController {
-    
+
+    private Long curUserId;
+    private final ActivitiesRepository activityRepo;
+
     @Data
     @AllArgsConstructor
     private class ActivityBriefData{
@@ -27,42 +31,40 @@ public class ActivitiesController {
         String activityDistance;
         Long activityId;
     }
+
+    @Autowired
+    public ActivitiesController(ActivitiesRepository activityRepository){
+        this.activityRepo = activityRepository;
+    } 
+    
     
 
     @ModelAttribute
     public void addUserDataToModel(@AuthenticationPrincipal Users currentUser, Model model){
         model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentFirstName", currentUser.getFirstName());
+        this.curUserId = currentUser.getId();
     }
 
-    @ModelAttribute(name ="activityList")
+    @ModelAttribute(name ="activityBDList")
     public List<ActivityBriefData>  addActivityList(){
-        List<ActivityBriefData> activityList = new ArrayList<>();
-        activityList.add(new ActivityBriefData(
-            "01-март-2025",
-            "Дневной бег",
-            "Бег",
-            "0h 32m",
-            "5.2",
-            1024l
-        ));
-        activityList.add(new ActivityBriefData(
-            "02-март-2025",
-            "Утренний бег",
-            "Бег",
-            "1h 02m",
-            "10.1",
-            1025l
-        ));
-        activityList.add(new ActivityBriefData(
-            "03-март-2025",
-            "Вечерний бег",
-            "Бег",
-            "0h 52m",
-            "8.5",
-            1026l
-        ));
-        return activityList;
+        List<ActivityBriefData> activityBDList = new ArrayList<>();
+        List<Activities> activityList = activityRepo.findByUserId(this.curUserId);
+        if (!activityList.isEmpty()){
+            activityList.stream().forEach(
+                activity -> {
+                    activityBDList.add(
+                        new ActivityBriefData(
+                            activity.getActivityDate().toString(),
+                            activity.getActivityCaption(),
+                            activity.getActivityType(),
+                            Integer.toString(activity.getActivityDuration()),
+                            Double.toString(activity.getActivityDistance()),
+                            activity.getId()
+                        ));
+                });            
+        }
+        return activityBDList;
     }
 
     @GetMapping
