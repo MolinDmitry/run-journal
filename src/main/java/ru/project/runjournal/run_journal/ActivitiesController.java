@@ -31,7 +31,7 @@ public class ActivitiesController {
         Long activityId;
     }
 
-
+    @Autowired
     public ActivitiesController(ActivitiesRepository activityRepository){
         this.activityRepo = activityRepository;
     } 

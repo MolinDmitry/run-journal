@@ -26,7 +26,6 @@ public class ActivityAddingController {
 
     private final ActivitiesRepository activitiesRepo;
     private final TrackPointsRepository trackPointsRepo;
-    private long curUserId;
 
     @Autowired
     public ActivityAddingController(ActivitiesRepository activitiesRepository, TrackPointsRepository trackPointsRepository){
@@ -61,7 +60,7 @@ public class ActivityAddingController {
     public void addUserDataToModel(@AuthenticationPrincipal Users currentUser, Model model){
         model.addAttribute("currentUsername", currentUser.getUsername());
         model.addAttribute("currentFirstName", currentUser.getFirstName());
-        this.curUserId = currentUser.getId();
+        
     }
 
     @ModelAttribute void createActivityTypeAttribute(Model model){
@@ -86,7 +85,7 @@ public class ActivityAddingController {
      */
     @SuppressWarnings("unused")
     @PostMapping
-    public String processActivityAdding(NewActivityData activityData){
+    public String processActivityAdding(@AuthenticationPrincipal Users currentUser, NewActivityData activityData){
         if (!activityData.fileGPX.isEmpty()){
                 List<TrackPoints> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
                 if (trackPointsList != null){
@@ -100,11 +99,11 @@ public class ActivityAddingController {
                     ActivityDataProcessor.getActivityDuration(trackPointsList),
                     ActivityDataProcessor.getActivityDistance(trackPointsList),
                     trackPointsList.get(0).getTrackId(),
-                    this.curUserId,
+                    currentUser.getId(),
                     (byte)3,
                     (byte)0
                     );
-                    List<Activities> existingActivities = activitiesRepo.findByTrackIdAndUserId(trackPointsList.get(0).getTrackId(), curUserId);
+                    List<Activities> existingActivities = activitiesRepo.findByTrackIdAndUserId(trackPointsList.get(0).getTrackId(), currentUser.getId());
                     if (existingActivities.isEmpty()){
                         activitiesRepo.save(curActivity);
                         trackPointsRepo.saveAll(trackPointsList);
