@@ -7,22 +7,20 @@ import java.util.List;
  * @brief Обрабатывает данные тренировки
  */
 
-public class ActivityDataProcessor {
+public class ActivityInitialDataProcessor {
     private final static double Rp = 6356.86; //полярный радиус Земли
     private final static double Re = 6378.2; //экваториальный радиус Земли
     private List<TrackPoints> trkPointsList;
     private String activityType;
 
-    public ActivityDataProcessor(List<TrackPoints> trkPointsList, String activityType){
+    public ActivityInitialDataProcessor(List<TrackPoints> trkPointsList, String activityType){
         this.trkPointsList = trkPointsList;
         this.activityType = activityType;
     }
 
     public LocalDateTime getActivityStartTime(byte ZoneOffsetHour, byte ZoneOffsetMin){
         LocalDateTime dt_UTC = trkPointsList.get(0).getTime();
-        long epoch_sec = dt_UTC.toEpochSecond(ZoneOffset.UTC);
-        LocalDateTime dt_local = LocalDateTime.ofEpochSecond(epoch_sec, 0, ZoneOffset.ofHoursMinutes(ZoneOffsetHour, ZoneOffsetMin));
-        return dt_local;
+        return ActivityBriefDataProcessor.convertToLocalDateTime(dt_UTC, ZoneOffsetHour, ZoneOffsetMin);
     }
 
     public String getActivityCaption(byte ZoneOffsetHour, byte ZoneOffsetMin){

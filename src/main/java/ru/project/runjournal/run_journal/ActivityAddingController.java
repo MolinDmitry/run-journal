@@ -35,7 +35,7 @@ public class ActivityAddingController {
 
     @Data
     @AllArgsConstructor
-    private class NewActivityData{
+    private class ActivityInitialData{
         private String activityType;
         private List<String> activityComment;
         private MultipartFile fileGPX;
@@ -85,12 +85,12 @@ public class ActivityAddingController {
      */
     @SuppressWarnings("unused")
     @PostMapping
-    public String processActivityAdding(@AuthenticationPrincipal Users currentUser, NewActivityData activityData){
+    public String processActivityAdding(@AuthenticationPrincipal Users currentUser, ActivityInitialData activityData){
         if (!activityData.fileGPX.isEmpty()){
                 List<TrackPoints> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
                 if (trackPointsList != null){
                     // формируем данные для тренировки для сохранения в БД
-                    ActivityDataProcessor dataProc = new ActivityDataProcessor(trackPointsList, activityData.getActivityType());
+                    ActivityInitialDataProcessor dataProc = new ActivityInitialDataProcessor(trackPointsList, activityData.getActivityType());
                     Activities curActivity = new Activities(
                         dataProc.getActivityStartTime((byte)0,(byte)0),
                         activityData.getActivityType(),
