@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface ActivitiesRepository extends CrudRepository<Activities,Long>{
     List<Activities> findByTrackIdAndUserId(long trackId, long userId);
     List<Activities> findByUserIdOrderByActivityDateDesc(long userId); // сортировка в обратном порядке
+    
 
 }

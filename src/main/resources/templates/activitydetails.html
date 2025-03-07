@@ -74,6 +74,17 @@
             font-size: 12px;
             color: rgb(100, 100, 100);            
         } 
+
+        .errorfield{
+            padding-top: 25px; 
+            padding-bottom: 25px;
+            padding-left: 15px; 
+            padding-right: 15px;
+            background: rgb(255,235,233); 
+            border: solid 1px rgb(245, 177, 175);
+            text-align: center;
+            height: 40px;
+        }
         
         canvas {
     	border: 1px dashed black;
@@ -85,7 +96,8 @@
     <div class = "userName">
         <span th:text="${currentUsername}">Username</span><br>
         <span th:text="${currentFirstName}">Имя</span>
-    </div>
+    </div>   
+
     <table>
         <tr>
             <td style="text-align: right; border: solid 0px;"><a href="/" class="goToJournal"> Журнал тренировок >>></a><hr></td></tr>
@@ -101,36 +113,36 @@
             <table>
                 <tr>
                     <td colspan="2">
-                        <div class="blockHeader">Имя Фамилия</div>
-                        <div class="blockSmallFont" style="padding-left: 15px;">Дата, время начала</div>
+                        <div class="blockHeader" th:text="${currentFirstName} + ' ' + ${currentLastName}">--</div>
+                        <div class="blockSmallFont" style="padding-left: 15px;" th:text="${startDateTime}">--</div>
                     </td>
-                    <td align="center"><div style="font-size: 24px;">0.00 </div>км</td>
+                    <td align="center"><div style="font-size: 24px;" th:text="${activityDistanceString}">-- </div>км</td>
                 </tr>
                 <tr align="center">
                     <td style="width: 33%;">
-                        <div class="blockLargeFont">50:00</div>
+                        <div class="blockLargeFont" th:text="${activityDurationString}">--</div>
                         <div class="blockSmallFont">Время тренировки</div>
                     </td>
                     <td style="width: 33%;">
-                        <div class="blockLargeFont">05'58"</div>
+                        <div class="blockLargeFont" th:text="${averagePaceString}">--</div>
                         <div class="blockSmallFont">Средний темп</div>
                     </td>
                     <td style="width: 34%;">
-                        <div class="blockLargeFont">137</div>
+                        <div class="blockLargeFont" th:text="${averageHrString}">--</div>
                         <div class="blockSmallFont">Средний пульс</div>
                     </td>
                 </tr>
                 <tr align="center">
                     <td>
-                        <div class="blockLargeFont">450</div>
+                        <div class="blockLargeFont" th:text="${enegryConsString}">--</div>
                         <div class="blockSmallFont">Сожжено</div>
                     </td>
                     <td>
-                        <div class="blockLargeFont">04'30"</div>
+                        <div class="blockLargeFont" th:text="${bestPaceString}">--</div>
                         <div class="blockSmallFont">Лучший темп</div>
                     </td>
                     <td>
-                        <div class="blockLargeFont">157</div>
+                        <div class="blockLargeFont" th:text="${maxHrString}">--</div>
                         <div class="blockSmallFont">Макс. пульс</div>
                     </td>
                 </tr>
@@ -139,19 +151,19 @@
         <tr><td class="mainTableRow">
             <table>
                 <tr><td colspan="4">
-                    <span class="blockHeader">Сведения за километр</span>
+                    <div class="blockHeader">Сведения за километр</div>
                 </td></tr>
                 <tr align="center">
-                    <td><span class="blockSmallFont">км</span></td>
-                    <td><span class="blockSmallFont">Темп(км)</span></td>
-                    <td><span class="blockSmallFont">Пульс</span></td>
-                    <td><span class="blockSmallFont">Время</span></td>
+                    <td><div class="blockSmallFont">км</div></td>
+                    <td><div class="blockSmallFont">Темп(км)</div></td>
+                    <td><div class="blockSmallFont">Пульс</div></td>
+                    <td><div class="blockSmallFont">Время</div></td>
                 </tr>
-                <tr align="center">
-                    <td><span class="blockLargeFont">1</span></td>
-                    <td><span class="blockLargeFont">07'15"</span></td>
-                    <td><span class="blockLargeFont">130</span></td>
-                    <td><span class="blockLargeFont">07:15</span></td>
+                <tr align="center" th:each = "distanceDetailsRow:${detailDistanceList}">
+                    <td><div class="blockLargeFont" th:text="${distanceDetailsRow.milestone}">--</div></td>
+                    <td><div class="blockLargeFont" th:text="${distanceDetailsRow.pace}">--</div></td>
+                    <td><div class="blockLargeFont" th:text="${distanceDetailsRow.hr}">--</div></td>
+                    <td><div class="blockLargeFont" th:text="${distanceDetailsRow.timeString}">--</div></td>
                 </tr>
             </table>            
         </td></tr>

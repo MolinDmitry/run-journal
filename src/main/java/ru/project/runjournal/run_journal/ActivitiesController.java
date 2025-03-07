@@ -54,11 +54,11 @@ public class ActivitiesController {
                 activity -> {
                     activityBDList.add(
                         new ActivityBriefData(
-                            ActivityBriefDataProcessor.convertActivityDate(activity),
+                            ActivityBriefDataProcessor.convertActivityDateToString(activity),
                             activity.getActivityCaption(),
-                            ActivityBriefDataProcessor.convertActivityTypeToRUS(activity),
-                            ActivityBriefDataProcessor.convertActivityDurance(activity),
-                            ActivityBriefDataProcessor.convertActivityDistance(activity),
+                            ActivityBriefDataProcessor.convertActivityTypeToRusString(activity),
+                            ActivityBriefDataProcessor.convertActivityDurationToString(activity,false),
+                            ActivityBriefDataProcessor.convertActivityDistanceToString(activity) + " km",
                             activity.getId()
                         ));
                 });            

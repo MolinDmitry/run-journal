@@ -28,7 +28,7 @@ public class ActivityBriefDataProcessor {
  * @brief Конвертирует дату тренировки в формат день-месяц-год в локальном часовом поясе
  * @return Строка с датой тренировки
  */
-    public static String convertActivityDate(Activities activity){
+    public static String convertActivityDateToString(Activities activity){
         LocalDateTime activityDate = activity.getActivityDate();
         byte zoneOffsetH = activity.getTimeZoneOffsetHours();
         byte ZoneOffsetM = activity.getTimeZoneOffsetMinuts();
@@ -82,31 +82,42 @@ public class ActivityBriefDataProcessor {
         return result;
     }
     /**
-     * @brief Конвертирует длительность тренировки в строку формата часы:минуты 
+     * @brief Конвертирует длительность тренировки в строку формата 1 ч 10 мин или 1:10:20 
      * @param activity Сущность тренировки
+     * @param withSecondsFlag флаг выбора формата 
      * @return Строка с длительностью тренировки
      */
-    public static String convertActivityDurance(Activities activity){
+    public static String convertActivityDurationToString(Activities activity, boolean withSecondsFlag){
         int duration = activity.getActivityDuration();
         Integer durH = duration/3600;
-        Integer durM = duration/60;
-        String result = durH.toString() + "ч " + (durM >10 ? durM.toString() : "0"+ durM.toString());        
-        return  result + "мин";
+        Integer durM = duration/60 - durH*60;
+        String result = durH.toString();
+        if (withSecondsFlag){
+            Integer durS = duration%60;
+            result = result + ":" + (durM >10 ? durM.toString() : "0"+ durM.toString());
+            result = result + ":" + (durS >10 ? durS.toString() : "0"+ durS.toString());            
+        }
+        else
+        {
+            result = result + "ч " + (durM >10 ? durM.toString() : "0"+ durM.toString());
+            result += "мин";
+        }        
+        return  result;
     }
     /**
      * @brief Конвертирует дистанцию тренировки в стоку с округлением до двух знаков после запятой
      * @param activity Сущность тренировки
      * @return Строка с дистанцией тренировки
      */
-    public static String convertActivityDistance(Activities activity){
-        return String.format("%.2f", activity.getActivityDistance()).replace(",", ".") + " km";
+    public static String convertActivityDistanceToString(Activities activity){
+        return String.format("%.2f", activity.getActivityDistance()).replace(",", ".");
     }
 
     /**
      * @brief Конвертирует тип тренировки в русскоязычное нименование
      * @return Строку с русским наименованием типа тренировки
      */
-    public static String convertActivityTypeToRUS(Activities activity){
+    public static String convertActivityTypeToRusString(Activities activity){
         String result = "";
         switch (activity.getActivityType()) {
             case "RUNNING":
