@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.project.runjournal</groupId>
 	<artifactId>run-journal</artifactId>
-	<version>0.0.3</version>
+	<version>1.0.0-snapshot</version>
 	<name>run-journal</name>
 	<description>Project RunJournal</description>
 	<url/>
