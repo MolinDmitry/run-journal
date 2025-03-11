@@ -1,4 +1,4 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.DataProcessing;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.project.runjournal.run_journal.Entities.TrackPoints;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;

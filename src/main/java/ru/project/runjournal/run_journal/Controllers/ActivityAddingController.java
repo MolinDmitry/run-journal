@@ -1,4 +1,4 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.Controllers;
 
 
 import java.util.Arrays;
@@ -17,6 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import ru.project.runjournal.run_journal.DataProcessing.ActivityInitialDataProcessor;
+import ru.project.runjournal.run_journal.DataProcessing.GpxProcessor;
+import ru.project.runjournal.run_journal.Entities.Activities;
+import ru.project.runjournal.run_journal.Entities.TrackPoints;
+import ru.project.runjournal.run_journal.Entities.Users;
+import ru.project.runjournal.run_journal.Repositories.ActivitiesRepository;
+import ru.project.runjournal.run_journal.Repositories.TrackPointsRepository;
 
 
 @Slf4j

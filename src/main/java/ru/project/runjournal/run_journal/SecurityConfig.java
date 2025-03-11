@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import ru.project.runjournal.run_journal.Entities.Users;
+import ru.project.runjournal.run_journal.Repositories.UsersRepository;
+
 /**
  * @brief Класс конфигурации модуля безопасности
  * 

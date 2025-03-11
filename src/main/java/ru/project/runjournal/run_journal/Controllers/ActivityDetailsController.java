@@ -1,4 +1,4 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.Controllers;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import ru.project.runjournal.run_journal.DataProcessing.ActivityBriefDataProcessor;
+import ru.project.runjournal.run_journal.DataProcessing.ActivityDetailDataProcessor;
+import ru.project.runjournal.run_journal.Entities.Activities;
+import ru.project.runjournal.run_journal.Entities.TrackPoints;
+import ru.project.runjournal.run_journal.Entities.Users;
+import ru.project.runjournal.run_journal.Repositories.ActivitiesRepository;
+import ru.project.runjournal.run_journal.Repositories.TrackPointsRepository;
 
 @Controller
 @RequestMapping("/activitydetails")

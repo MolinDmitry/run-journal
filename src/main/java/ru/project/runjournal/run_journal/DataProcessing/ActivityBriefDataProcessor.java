@@ -1,8 +1,10 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.DataProcessing;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
+
+import ru.project.runjournal.run_journal.Entities.Activities;
 
 /**
  * @brief Обрабатывает краткие данные о тренировке для журнала тренировок

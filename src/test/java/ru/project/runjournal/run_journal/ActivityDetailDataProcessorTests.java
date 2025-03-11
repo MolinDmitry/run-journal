@@ -17,6 +17,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ru.project.runjournal.run_journal.DataProcessing.ActivityDetailDataProcessor;
+import ru.project.runjournal.run_journal.Entities.Activities;
+import ru.project.runjournal.run_journal.Entities.DistanceDetailsRow;
+import ru.project.runjournal.run_journal.Entities.TrackPoints;
+
 
 @ExtendWith(MockitoExtension.class)
 public class ActivityDetailDataProcessorTests {

@@ -1,4 +1,4 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.Controllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.project.runjournal.run_journal.DataProcessing.ActivityBriefDataProcessor;
+import ru.project.runjournal.run_journal.Entities.Activities;
+import ru.project.runjournal.run_journal.Entities.Users;
+import ru.project.runjournal.run_journal.Repositories.ActivitiesRepository;
 
 @Controller
 @RequestMapping("/")

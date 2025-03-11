@@ -1,4 +1,4 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.Entities;
 
 import java.time.LocalDateTime;
 

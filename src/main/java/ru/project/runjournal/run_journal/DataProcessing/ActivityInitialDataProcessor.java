@@ -1,8 +1,10 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.DataProcessing;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+
+import ru.project.runjournal.run_journal.Entities.TrackPoints;
 /**
  * @brief Обрабатывает данные тренировки
  */

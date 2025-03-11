@@ -1,9 +1,13 @@
-package ru.project.runjournal.run_journal;
+package ru.project.runjournal.run_journal.DataProcessing;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+
+import ru.project.runjournal.run_journal.Entities.Activities;
+import ru.project.runjournal.run_journal.Entities.DistanceDetailsRow;
+import ru.project.runjournal.run_journal.Entities.TrackPoints;
 
 
 /**
