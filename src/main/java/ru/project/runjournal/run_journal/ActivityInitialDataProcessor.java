@@ -8,8 +8,6 @@ import java.util.List;
  */
 
 public class ActivityInitialDataProcessor {
-    private final static double Rp = 6356.86; //полярный радиус Земли
-    private final static double Re = 6378.2; //экваториальный радиус Земли
     private List<TrackPoints> trkPointsList;
     private String activityType;
 
@@ -103,18 +101,28 @@ public class ActivityInitialDataProcessor {
         return duration_sec.intValue();
     }
 
+    /**
+     * @brief Возвращает дистанцию тренировки
+     * Участки с темпом вне диапазона 20-800 сек/км не учитываются 
+     * @return Значение дистанции в км
+     */
     public double getActivityDistance(){
-        double fi= trkPointsList.get(0).getLatitude()*Math.PI/180; // широта места тренировки в рад
-        double R = Math.cos(fi)*(Re-Rp)+Rp; // радиус Земли на широте тренировки (при допущении формы Земли в виде идеального геоида)
-        // аппроксимируем поверхность Земли сферой с радиусом R
-        double Rm = R*Math.cos(fi); // радиус парралели в месте тренировки
-        double sLat = 2*Math.PI*R/360; // длина дуги по поверхности на 1 градус широты
-        double sLon = 2*Math.PI*Rm/360; // длина дуги по поверхности на 1 градус долготы
         double distance = 0;
+        double[] coordScales = ActivityDetailDataProcessor.getCoordinateScaleFactors(trkPointsList.get(0));
         for(int i = 1; i<trkPointsList.size();i++){
-            double dLat = (trkPointsList.get(i).getLatitude() - trkPointsList.get(i-1).getLatitude())*sLat;
-            double dLon = (trkPointsList.get(i).getLongitude() - trkPointsList.get(i-1).getLongitude())*sLon;
-            distance += Math.sqrt(dLat*dLat + dLon*dLon); 
+            double dl= ActivityDetailDataProcessor.getDistanceBetweenTrackPoints(
+                trkPointsList.get(i),
+                trkPointsList.get(i-1),
+                coordScales
+                );
+            long t0 = trkPointsList.get(i-1).getTime().toInstant(ZoneOffset.UTC).toEpochMilli();
+            long t1 = trkPointsList.get(i).getTime().toInstant(ZoneOffset.UTC).toEpochMilli();
+            double pace = 20000;
+            if (dl>0.00001) pace = ((double)(t1-t0))/(1000*dl);
+            if (pace > 20 && pace < 800){
+                distance+=dl;
+            }           
+
         }
         return distance;
     }

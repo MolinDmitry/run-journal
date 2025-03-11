@@ -87,15 +87,14 @@ public class ActivityBriefDataProcessor {
      * @param withSecondsFlag флаг выбора формата 
      * @return Строка с длительностью тренировки
      */
-    public static String convertActivityDurationToString(Activities activity, boolean withSecondsFlag){
-        int duration = activity.getActivityDuration();
+    public static String convertActivityDurationToString(int duration, boolean withSecondsFlag){
         Integer durH = duration/3600;
         Integer durM = duration/60 - durH*60;
         String result = durH.toString();
         if (withSecondsFlag){
             Integer durS = duration%60;
-            result = result + ":" + (durM >10 ? durM.toString() : "0"+ durM.toString());
-            result = result + ":" + (durS >10 ? durS.toString() : "0"+ durS.toString());            
+            result = result + ":" + (durM >=10 ? durM.toString() : "0"+ durM.toString());
+            result = result + ":" + (durS >=10 ? durS.toString() : "0"+ durS.toString());            
         }
         else
         {

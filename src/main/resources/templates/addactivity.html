@@ -78,7 +78,18 @@
 <body>
     <div style="text-align: right; padding-top: 10px; padding-bottom: 10px; padding-right: 100px; color: rgb(100, 100, 100);">
         <span th:text="${currentUsername}">Username</span><br>
-        <span th:text="${currentFirstName}">Имя</span>
+        <span th:text="${currentFirstName}">Имя</span><br>
+        <form method = "POST" th:action="@{/logout}">
+            <input type = "submit" value = "Выйти из аккаунта" 
+            style = "background-color: white; 
+                    color: rgb(100, 100, 100); 
+                    border: none;
+                    font-size: 15px;
+                    cursor:pointer;
+                    padding-top: 3px;
+                    padding-right: 0px
+                    ">
+        </form>
     </div>
     <table>        
         <tr th:if="${param.gpxisnot}" class="errorfield"><td>

@@ -57,7 +57,7 @@ public class ActivitiesController {
                             ActivityBriefDataProcessor.convertActivityDateToString(activity),
                             activity.getActivityCaption(),
                             ActivityBriefDataProcessor.convertActivityTypeToRusString(activity),
-                            ActivityBriefDataProcessor.convertActivityDurationToString(activity,false),
+                            ActivityBriefDataProcessor.convertActivityDurationToString(activity.getActivityDuration(),false),
                             ActivityBriefDataProcessor.convertActivityDistanceToString(activity) + " km",
                             activity.getId()
                         ));

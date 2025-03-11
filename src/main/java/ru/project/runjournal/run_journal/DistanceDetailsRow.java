@@ -7,9 +7,10 @@ import lombok.Data;
  * @brief Строка детальной информации сведений за км 
  */
 
-@Data@AllArgsConstructor
+@Data
+@AllArgsConstructor
 public class DistanceDetailsRow {
-    private short milestone;
+    private double milestone;
     private String pace;
     private short hr;
     private String timeString;

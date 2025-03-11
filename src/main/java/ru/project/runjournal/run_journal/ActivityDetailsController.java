@@ -36,8 +36,7 @@ public class ActivityDetailsController {
 
 
     @GetMapping
-    public String showActivityDetailsPage(@AuthenticationPrincipal Users curUser, @RequestParam long id, Model model){
-        Long curUserId = curUser.getId();
+    public String showActivityDetailsPage(@RequestParam long id, Model model){        
         Optional<Activities> curActivityOptional= activityRepo.findById(id);
         if (curActivityOptional.isPresent()){
             Activities curActivity = curActivityOptional.get();
@@ -45,11 +44,12 @@ public class ActivityDetailsController {
             if (!curTrack.isEmpty()){
                 model.addAttribute("startDateTime", ActivityDetailDataProcessor.getActivityDateTimeAsString(curActivity));
                 model.addAttribute("activityDistanceString", ActivityBriefDataProcessor.convertActivityDistanceToString(curActivity));
-                model.addAttribute("activityDurationString", ActivityBriefDataProcessor.convertActivityDurationToString(curActivity, true));
-                model.addAttribute("averagePaceString", ActivityDetailDataProcessor.getActivityAveragePaceAsString(curTrack));
+                model.addAttribute("activityDurationString", ActivityBriefDataProcessor.convertActivityDurationToString(curActivity.getActivityDuration(), true));
+                int avgPace = ActivityDetailDataProcessor.getActivityAveragePace(curTrack);
+                model.addAttribute("averagePaceString", ActivityDetailDataProcessor.convertPaceToString(avgPace));
                 model.addAttribute("averageHrString", ActivityDetailDataProcessor.getActivityAverageHrAsString(curTrack));
-                model.addAttribute("enegryConsString", ActivityDetailDataProcessor.getActivityEnegryConsAsString(curActivity)+" ккал");
-                model.addAttribute("bestPaceString", ActivityDetailDataProcessor.getActivityBestPaceAsString(curTrack));
+                model.addAttribute("enegryConsString", ActivityDetailDataProcessor.getActivityEnegryConsAsString(curActivity,avgPace, 75)+" ккал");
+                model.addAttribute("bestPaceString", ActivityDetailDataProcessor.convertPaceToString(ActivityDetailDataProcessor.getActivityBestPace(curTrack)));
                 model.addAttribute("maxHrString", ActivityDetailDataProcessor.getActivityMaxHrAsString(curTrack));
                 model.addAttribute("detailDistanceList",ActivityDetailDataProcessor.getDistanceDetails(curTrack));
             }
