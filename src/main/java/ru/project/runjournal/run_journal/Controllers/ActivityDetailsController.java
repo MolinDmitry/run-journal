@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.project.runjournal.run_journal.DataProcessing.ActivityBriefDataProcessor;
-import ru.project.runjournal.run_journal.DataProcessing.ActivityDetailDataProcessor;
+import ru.project.runjournal.run_journal.DataProcessing.ActivityDataProcessor;
 import ru.project.runjournal.run_journal.Entities.Activities;
 import ru.project.runjournal.run_journal.Entities.TrackPoints;
 import ru.project.runjournal.run_journal.Entities.Users;
@@ -50,16 +49,16 @@ public class ActivityDetailsController {
             Activities curActivity = curActivityOptional.get();
             List<TrackPoints> curTrack= trackPointsRepo.findByTrackIdOrderByTime(curActivity.getTrackId());
             if (!curTrack.isEmpty()){
-                model.addAttribute("startDateTime", ActivityDetailDataProcessor.getActivityDateTimeAsString(curActivity));
-                model.addAttribute("activityDistanceString", ActivityBriefDataProcessor.convertActivityDistanceToString(curActivity));
-                model.addAttribute("activityDurationString", ActivityBriefDataProcessor.convertActivityDurationToString(curActivity.getActivityDuration(), true));
-                int avgPace = ActivityDetailDataProcessor.getActivityAveragePace(curTrack);
-                model.addAttribute("averagePaceString", ActivityDetailDataProcessor.convertPaceToString(avgPace));
-                model.addAttribute("averageHrString", ActivityDetailDataProcessor.getActivityAverageHrAsString(curTrack));
-                model.addAttribute("enegryConsString", ActivityDetailDataProcessor.getActivityEnegryConsAsString(curActivity,avgPace, 75)+" ккал");
-                model.addAttribute("bestPaceString", ActivityDetailDataProcessor.convertPaceToString(ActivityDetailDataProcessor.getActivityBestPace(curTrack)));
-                model.addAttribute("maxHrString", ActivityDetailDataProcessor.getActivityMaxHrAsString(curTrack));
-                model.addAttribute("detailDistanceList",ActivityDetailDataProcessor.getDistanceDetails(curTrack));
+                model.addAttribute("startDateTime", ActivityDataProcessor.getActivityDateTimeAsString(curActivity));
+                model.addAttribute("activityDistanceString", ActivityDataProcessor.convertActivityDistanceToString(curActivity));
+                model.addAttribute("activityDurationString", ActivityDataProcessor.convertActivityDurationToString(curActivity.getActivityDuration(), true));
+                int avgPace = ActivityDataProcessor.getActivityAveragePace(curTrack);
+                model.addAttribute("averagePaceString", ActivityDataProcessor.convertPaceToString(avgPace));
+                model.addAttribute("averageHrString", ActivityDataProcessor.getActivityAverageHrAsString(curTrack));
+                model.addAttribute("enegryConsString", ActivityDataProcessor.getActivityEnegryConsAsString(curActivity,avgPace, 75)+" ккал");
+                model.addAttribute("bestPaceString", ActivityDataProcessor.convertPaceToString(ActivityDataProcessor.getActivityBestPace(curTrack)));
+                model.addAttribute("maxHrString", ActivityDataProcessor.getActivityMaxHrAsString(curTrack));
+                model.addAttribute("detailDistanceList",ActivityDataProcessor.getDistanceDetails(curTrack));
             }
             else{
                 return "redirect:errorpage?tracknotfounderror";

@@ -17,14 +17,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ru.project.runjournal.run_journal.DataProcessing.ActivityDetailDataProcessor;
+import ru.project.runjournal.run_journal.DataProcessing.ActivityDataProcessor;
 import ru.project.runjournal.run_journal.Entities.Activities;
 import ru.project.runjournal.run_journal.Entities.DistanceDetailsRow;
 import ru.project.runjournal.run_journal.Entities.TrackPoints;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ActivityDetailDataProcessorTests {
+public class ActivityDataProcessorTests {
 
 
     @ParameterizedTest
@@ -43,7 +43,7 @@ public class ActivityDetailDataProcessorTests {
             Mockito.when(trackPoint.getHr()).thenReturn(Short.valueOf(strArr[i]));
             track.add(trackPoint);
         }        
-        Assertions.assertEquals(result, ActivityDetailDataProcessor.getActivityAverageHrAsString(track));
+        Assertions.assertEquals(result, ActivityDataProcessor.getActivityAverageHrAsString(track));
     }
 
     @ParameterizedTest
@@ -57,7 +57,7 @@ public class ActivityDetailDataProcessorTests {
         "100\'00\",6000"
     })
     void testGetActivityAveragePaceAsString(String result, int pace) {
-        Assertions.assertEquals(result, ActivityDetailDataProcessor.convertPaceToString(pace));
+        Assertions.assertEquals(result, ActivityDataProcessor.convertPaceToString(pace));
     }
 
 
@@ -83,7 +83,7 @@ public class ActivityDetailDataProcessorTests {
         mockTrackPointsList.add(mockTrackPoint2);
         mockTrackPointsList.add(mockTrackPoint3);
 
-        Assertions.assertEquals(353, ActivityDetailDataProcessor.getActivityAveragePace(mockTrackPointsList));        
+        Assertions.assertEquals(353, ActivityDataProcessor.getActivityAveragePace(mockTrackPointsList));        
     }
 
     @ParameterizedTest
@@ -99,7 +99,7 @@ public class ActivityDetailDataProcessorTests {
         List<TrackPoints> track = new ArrayList<>();
         double curLat = 55.75;
         double curLon = 49.24;
-        double[] scaleFactors = ActivityDetailDataProcessor.getCoordinateScaleFactors(new TrackPoints(curLat, curLon));
+        double[] scaleFactors = ActivityDataProcessor.getCoordinateScaleFactors(new TrackPoints(curLat, curLon));
         int numPoint = 0;
         for(int i=0;i<strArray.length;i+=2){
             double curPace = Math.sqrt(2)*Double.parseDouble(strArray[i+1]);
@@ -145,7 +145,7 @@ public class ActivityDetailDataProcessorTests {
                 numPoint++;                
             }
         }
-        Assertions.assertEquals(result, ActivityDetailDataProcessor.getActivityBestPace(track));
+        Assertions.assertEquals(result, ActivityDataProcessor.getActivityBestPace(track));
         
 
     }
@@ -189,7 +189,7 @@ public class ActivityDetailDataProcessorTests {
                             String result = Integer.toString(day) + "-" + monthStr + "-" + Integer.toString(year);
                             result += " " + Integer.toString(hour) + ":" + (min < 10 ? "0": "");
                             result += Integer.toString(min);
-                            Assertions.assertEquals(result,ActivityDetailDataProcessor.getActivityDateTimeAsString(testActivity));                            
+                            Assertions.assertEquals(result,ActivityDataProcessor.getActivityDateTimeAsString(testActivity));                            
                         }
                     }
                 }
@@ -214,7 +214,7 @@ public class ActivityDetailDataProcessorTests {
                                 (byte)0);
         String result = String.format("%.0f", 61.25*60/pace*m*duration/3600);
         
-        Assertions.assertEquals(result, ActivityDetailDataProcessor.getActivityEnegryConsAsString(testActivity, pace, m));
+        Assertions.assertEquals(result, ActivityDataProcessor.getActivityEnegryConsAsString(testActivity, pace, m));
 
     }
 
@@ -234,7 +234,7 @@ public class ActivityDetailDataProcessorTests {
             Mockito.when(point.getHr()).thenReturn(Short.valueOf(strArray[i]));
             track.add(point);
         }
-        Assertions.assertEquals(result, ActivityDetailDataProcessor.getActivityMaxHrAsString(track));
+        Assertions.assertEquals(result, ActivityDataProcessor.getActivityMaxHrAsString(track));
     }
 
     @Test
@@ -251,7 +251,7 @@ public class ActivityDetailDataProcessorTests {
         double curLat = 55.75;
         double curLon = 49.24;
         short curHR = 150;
-        double[] scaleFactors = ActivityDetailDataProcessor.getCoordinateScaleFactors(new TrackPoints(curLat, curLon));
+        double[] scaleFactors = ActivityDataProcessor.getCoordinateScaleFactors(new TrackPoints(curLat, curLon));
         int numPoint = 0;
         int curTotalPace = 330;        
         TrackPoints point;
@@ -282,7 +282,7 @@ public class ActivityDetailDataProcessorTests {
             }            
         }
 
-        List<DistanceDetailsRow> obtainedResult = ActivityDetailDataProcessor.getDistanceDetails(track);
+        List<DistanceDetailsRow> obtainedResult = ActivityDataProcessor.getDistanceDetails(track);
         for (int i = 0; i < expectedResult.size(); i++) {
             Assertions.assertEquals(expectedResult.get(i).getMilestone(), obtainedResult.get(i).getMilestone());
             Assertions.assertEquals(expectedResult.get(i).getPace(), obtainedResult.get(i).getPace());

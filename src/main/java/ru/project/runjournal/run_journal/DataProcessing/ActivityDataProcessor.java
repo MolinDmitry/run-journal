@@ -1,6 +1,7 @@
 package ru.project.runjournal.run_journal.DataProcessing;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +10,278 @@ import ru.project.runjournal.run_journal.Entities.Activities;
 import ru.project.runjournal.run_journal.Entities.DistanceDetailsRow;
 import ru.project.runjournal.run_journal.Entities.TrackPoints;
 
-
 /**
- * @brief Предоставляет функции преобразования для формирования подробных сведений о тренировке
+ * @brief Библиотека статических методов для обработки данных тренировки
  */
-public class ActivityDetailDataProcessor {
+
+public class ActivityDataProcessor {
     private final static double Rp = 6356.86; //полярный радиус Земли
     private final static double Re = 6378.2; //экваториальный радиус Земли
+    
+    public static LocalDateTime getActivityStartTime(List<TrackPoints> trkPointsList, byte ZoneOffsetHour, byte ZoneOffsetMin){
+        LocalDateTime dt_UTC = trkPointsList.get(0).getTime();
+        return convertToLocalDateTime(dt_UTC, ZoneOffsetHour, ZoneOffsetMin);
+    }
+
+    public static String getActivityCaption(String activityType, List<TrackPoints> trkPointsList, byte ZoneOffsetHour, byte ZoneOffsetMin){
+        boolean mIndicator; // true - мужской род
+        String typeRusString = "";
+        String timeOfDayString = "";
+        switch (activityType) {
+            case "RUNNING":
+                mIndicator = false;
+                typeRusString = "пробежка";
+                break;
+            case "RACE":
+                mIndicator = true;
+                typeRusString = "забег";
+                break;
+            case "TRAILRUNNING":
+                mIndicator = true;
+                typeRusString = "кросс";
+                break;
+            case "HIKING":
+                mIndicator = true;
+                typeRusString = "поход";
+                break;
+            case "TREKKING":
+                mIndicator = true;
+                typeRusString = "многодневный поход";
+                break;
+            case "WALK":
+                mIndicator = false;
+                typeRusString = "прогулка";
+                break;
+            case "BIKETOUR":
+                mIndicator = true;
+                typeRusString = "велопоход";
+                break;
+            case "BIKERIDE":
+                mIndicator = false;
+                typeRusString = "велопрогулка";
+                break;
+            case "BIKERACE":
+                mIndicator = false;
+                typeRusString = "велогонка";
+                break;
+            case "NORDICSKI":
+                mIndicator = false;
+                typeRusString = "лыжная прогулка";
+                break;
+            case "CLASSICSKI":
+                mIndicator = false;
+                typeRusString = "лыжная пробежка (классический стиль)";
+                break;
+            case "SKATESKI":
+                mIndicator = false;
+                typeRusString = "лыжная пробежка (свободный стиль)";
+                break;        
+            default:
+                mIndicator = false;
+                typeRusString = "тренировка";
+                break;
+        }
+        LocalDateTime activityStart = getActivityStartTime(trkPointsList, ZoneOffsetHour,ZoneOffsetMin);
+        int activityHour = activityStart.getHour();
+        if (activityHour >=4 && activityHour < 11)
+            timeOfDayString = mIndicator ? "Утренний":"Утренняя";
+        else
+            if (activityHour >=11 && activityHour < 17)
+                timeOfDayString = mIndicator ? "Дневной":"Дневная";
+            else
+                if (activityHour >=17 && activityHour < 22)
+                    timeOfDayString = mIndicator ? "Вечерний":"Вечерняя";
+                else
+                    timeOfDayString = mIndicator ? "Ночной":"Ночная";
+
+        return timeOfDayString + " " + typeRusString;
+    }
+
+    public static int getActivityDuration(List<TrackPoints> trkPointsList){
+        Long duration_sec = trkPointsList.get(trkPointsList.size()-1).getTime().toEpochSecond(ZoneOffset.UTC) - 
+        trkPointsList.get(0).getTime().toEpochSecond(ZoneOffset.UTC);
+        return duration_sec.intValue();
+    }
+
+    /**
+     * @brief Возвращает дистанцию тренировки
+     * Участки с темпом вне диапазона 20-800 сек/км не учитываются 
+     * @return Значение дистанции в км
+     */
+    public static double getActivityDistance(List<TrackPoints> trkPointsList){
+        double distance = 0;
+        double[] coordScales = getCoordinateScaleFactors(trkPointsList.get(0));
+        for(int i = 1; i<trkPointsList.size();i++){
+            double dl= getDistanceBetweenTrackPoints(
+                trkPointsList.get(i),
+                trkPointsList.get(i-1),
+                coordScales
+                );
+            long t0 = trkPointsList.get(i-1).getTime().toInstant(ZoneOffset.UTC).toEpochMilli();
+            long t1 = trkPointsList.get(i).getTime().toInstant(ZoneOffset.UTC).toEpochMilli();
+            double pace = 20000;
+            if (dl>0.00001) pace = ((double)(t1-t0))/(1000*dl);
+            if (pace > 20 && pace < 800){
+                distance+=dl;
+            }           
+
+        }
+        return distance;
+    }
+
+
+/**
+ * @brief Ковертирует дату и время из UTC в локальное время часового пояса
+ * @param UTCdateTime время UTC
+ * @param ZoneOffsetHour часы смещения временной зоны
+ * @param ZoneOffsetMin минуты смещения временной зоны
+ * @return
+ */
+    public static LocalDateTime convertToLocalDateTime(LocalDateTime UTCdateTime, byte ZoneOffsetHour, byte ZoneOffsetMin){
+        LocalDateTime dt_UTC = UTCdateTime;
+        long epoch_sec = dt_UTC.toEpochSecond(ZoneOffset.UTC);
+        LocalDateTime dt_local = LocalDateTime.ofEpochSecond(epoch_sec, 0, ZoneOffset.ofHoursMinutes(ZoneOffsetHour, ZoneOffsetMin));
+        return dt_local;
+    }
+   
+/**
+ * @brief Конвертирует дату тренировки в формат день-месяц-год в локальном часовом поясе
+ * @return Строка с датой тренировки
+ */
+    public static String convertActivityDateToString(Activities activity){
+        LocalDateTime activityDate = activity.getActivityDate();
+        byte zoneOffsetH = activity.getTimeZoneOffsetHours();
+        byte ZoneOffsetM = activity.getTimeZoneOffsetMinuts();
+        LocalDateTime activityLocalDateTime = convertToLocalDateTime(activityDate, zoneOffsetH, ZoneOffsetM);
+        int year = activityLocalDateTime.getYear();
+        Month month = activityLocalDateTime.getMonth();
+        int day = activityLocalDateTime.getDayOfMonth();
+        String result = Integer.toString(day);
+        switch (month) {
+            case Month.JANUARY:
+                result += "-янв-";
+                break;
+            case Month.FEBRUARY:
+                result += "-фев-";
+                break;
+            case Month.MARCH:
+                result += "-мар-";
+                break;
+            case Month.APRIL:
+                result += "-апр-";
+                break;
+            case Month.MAY:
+                result += "-май-";
+                break;
+            case Month.JUNE:
+                result += "-июн-";
+                break;
+            case Month.JULY:
+                result += "-июл-";
+                break;
+            case Month.AUGUST:
+                result += "-авг-";
+                break;
+            case Month.SEPTEMBER:
+                result += "-сен-";
+                break;
+            case Month.OCTOBER:
+                result += "-окт-";
+                break;
+            case Month.NOVEMBER:
+                result += "-ноя-";
+                break;
+            case Month.DECEMBER:
+                result += "-дек-";
+                break;
+            default:
+                result += "-   -";    
+                break;
+        }
+        result += Integer.toString(year);
+        return result;
+    }
+    /**
+     * @brief Конвертирует длительность тренировки в строку формата 1 ч 10 мин или 1:10:20 
+     * @param activity Сущность тренировки
+     * @param withSecondsFlag флаг выбора формата 
+     * @return Строка с длительностью тренировки
+     */
+    public static String convertActivityDurationToString(int duration, boolean withSecondsFlag){
+        Integer durH = duration/3600;
+        Integer durM = duration/60 - durH*60;
+        String result = durH.toString();
+        if (withSecondsFlag){
+            Integer durS = duration%60;
+            result = result + ":" + (durM >=10 ? durM.toString() : "0"+ durM.toString());
+            result = result + ":" + (durS >=10 ? durS.toString() : "0"+ durS.toString());            
+        }
+        else
+        {
+            result = result + "ч " + (durM >10 ? durM.toString() : "0"+ durM.toString());
+            result += "мин";
+        }        
+        return  result;
+    }
+    /**
+     * @brief Конвертирует дистанцию тренировки в стоку с округлением до двух знаков после запятой
+     * @param activity Сущность тренировки
+     * @return Строка с дистанцией тренировки
+     */
+    public static String convertActivityDistanceToString(Activities activity){
+        return String.format("%.2f", activity.getActivityDistance()).replace(",", ".");
+    }
+
+    /**
+     * @brief Конвертирует тип тренировки в русскоязычное нименование
+     * @return Строку с русским наименованием типа тренировки
+     */
+    public static String convertActivityTypeToRusString(Activities activity){
+        String result = "";
+        switch (activity.getActivityType()) {
+            case "RUNNING":
+                result = "Бег";
+                break;
+            case "RACE":
+                result = "Бег";
+                break;
+            case "TRAILRUNNING":
+                result = "Бег";
+                break;
+            case "HIKING":
+                result = "Ходьба";
+                break;
+            case "TREKKING":
+                result = "Поход";
+                break;
+            case "WALK":
+                result = "Прогулка";
+                break;
+            case "BIKETOUR":
+                result = "Велосипед";
+                break;
+            case "BIKERIDE":
+                result = "Велосипед";
+                break;
+            case "BIKERACE":
+                result = "Велосипед";
+                break;
+            case "NORDICSKI":
+                result = "Лыжи";
+                break;
+            case "CLASSICSKI":
+                result = "Лыжи";
+                break;
+            case "SKATESKI":
+                result = "Лыжи";
+                break;        
+            default:
+                result = "Тренировка";
+                break;
+        }
+        return result;
+    }
+
 
     /**
      * @brief Возвращает дату и время начала тренировки в виде строки вида 5-мар-2025 13:58
@@ -23,11 +289,11 @@ public class ActivityDetailDataProcessor {
      * @return Строка с датой и временем начала тренировки
      */
     public static String getActivityDateTimeAsString(Activities activity){
-        LocalDateTime localDateTime = ActivityBriefDataProcessor.convertToLocalDateTime(
+        LocalDateTime localDateTime = convertToLocalDateTime(
             activity.getActivityDate(), 
             activity.getTimeZoneOffsetHours(), 
             activity.getTimeZoneOffsetMinuts());
-        String dateString = ActivityBriefDataProcessor.convertActivityDateToString(activity);
+        String dateString = convertActivityDateToString(activity);
         int startTimeH = localDateTime.getHour();
         int startTimeM = localDateTime.getMinute();
         // В целях исключения дублирования кода, поместим время начала тренировки в объект Activities в поле длительности
@@ -35,7 +301,7 @@ public class ActivityDetailDataProcessor {
             localDateTime, "", "", null, 
             startTimeH*3600+startTimeM*60, 0, 0, 0, (byte)0, (byte)0);
         // получим строку времени начала в виде час:мин:сек
-        String timeString = ActivityBriefDataProcessor.convertActivityDurationToString(tempActivity.getActivityDuration(), true);
+        String timeString = convertActivityDurationToString(tempActivity.getActivityDuration(), true);
         String[] stringArr = timeString.split(":");
         String startTimeString = "--";
         if (stringArr.length >= 2){
@@ -67,9 +333,9 @@ public class ActivityDetailDataProcessor {
     public static int getActivityAveragePace(List<TrackPoints> trackPointsList){
         double distance = 0;
         long timeMilli = 0L;
-        double[] coordScales = ActivityDetailDataProcessor.getCoordinateScaleFactors(trackPointsList.get(0));
+        double[] coordScales = getCoordinateScaleFactors(trackPointsList.get(0));
         for(int i =1; i<trackPointsList.size();i++){
-            double dl = ActivityDetailDataProcessor.getDistanceBetweenTrackPoints(
+            double dl = getDistanceBetweenTrackPoints(
                 trackPointsList.get(i), 
                 trackPointsList.get(i-1), 
                 coordScales);
@@ -119,15 +385,15 @@ public class ActivityDetailDataProcessor {
 
     /**
      * @brief Возвращает максимальный пульс за тренировку
-     * Усреднение 20 точек трека без учета данных вне диапазона 40-210
-     * Если точек меньше 20, то пульс не рассчитывается
+     * Усреднение 10 точек трека без учета данных вне диапазона 40-210
+     * Если точек меньше 10, то пульс не рассчитывается
      * @param trackPointsList Список точек трека
      * @return Максимальный пульс уд/мин
      */
     public static String getActivityMaxHrAsString(List<TrackPoints> trackPointsList){
         int counter = 0;
         int maxHr = 0;
-        final int filterWindowWidth = 20;
+        final int filterWindowWidth = 10;
         int[] slidingWindow = new int[filterWindowWidth];
         boolean tenPointsIsPresentFlag = false;
         for(var point:trackPointsList){
@@ -177,12 +443,12 @@ public class ActivityDetailDataProcessor {
     public static int getActivityBestPace(List<TrackPoints> trackPointsList){
         double distance = 0;
         double time = 0;
-        double[] scaleFactors = ActivityDetailDataProcessor.getCoordinateScaleFactors(trackPointsList.get(0));
+        double[] scaleFactors = getCoordinateScaleFactors(trackPointsList.get(0));
         List<double[]> timeDistance = new ArrayList<>();
         double[] pair0 = {0,0};
         timeDistance.add(pair0);
         for(int i=1; i<trackPointsList.size();i++){
-            double dl = ActivityDetailDataProcessor.getDistanceBetweenTrackPoints(
+            double dl = getDistanceBetweenTrackPoints(
                 trackPointsList.get(i),
                 trackPointsList.get(i-1),
                 scaleFactors);
@@ -230,7 +496,7 @@ public class ActivityDetailDataProcessor {
      */
     public static List<DistanceDetailsRow> getDistanceDetails(List<TrackPoints> trackPointsList){
         List<DistanceDetailsRow> result = new ArrayList<DistanceDetailsRow>();
-        double[] scaleFactors = ActivityDetailDataProcessor.getCoordinateScaleFactors(trackPointsList.get(0));
+        double[] scaleFactors = getCoordinateScaleFactors(trackPointsList.get(0));
         double sector = 0;
         double time = 0;
         double sectorStartTime = -1;
@@ -238,7 +504,7 @@ public class ActivityDetailDataProcessor {
         int numHrSamples = 0;
         int sumHR = 0;
         for (int i = 1; i < trackPointsList.size(); i++){
-            double dl = ActivityDetailDataProcessor.getDistanceBetweenTrackPoints(
+            double dl = getDistanceBetweenTrackPoints(
                 trackPointsList.get(i),
                 trackPointsList.get(i-1), 
                 scaleFactors);
@@ -261,9 +527,9 @@ public class ActivityDetailDataProcessor {
                 int sectorPace = (int)Math.round((double)(time-sectorStartTime)/sector);
                 result.add(new DistanceDetailsRow(
                     sector>1 ? (double)numSector: ((double)Math.round((sector+numSector-1)*10))/10,
-                    ActivityDetailDataProcessor.convertPaceToString(sectorPace),
+                    convertPaceToString(sectorPace),
                     (short)Math.round((double)sumHR/numHrSamples), 
-                    ActivityBriefDataProcessor.convertActivityDurationToString((int)Math.round(time), true)));
+                    convertActivityDurationToString((int)Math.round(time), true)));
                 sector-=1;
                 sectorStartTime = time;
                 sumHR=0;
@@ -303,5 +569,6 @@ public class ActivityDetailDataProcessor {
         double dLon = (trackPoint.getLongitude() - lastTrackPoint.getLongitude())*coordScaleFactors[1];
         return Math.sqrt(dLat*dLat + dLon*dLon);
     }
+
 
 }

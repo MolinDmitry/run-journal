@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.project.runjournal.run_journal.DataProcessing.ActivityBriefDataProcessor;
+import ru.project.runjournal.run_journal.DataProcessing.ActivityDataProcessor;
 import ru.project.runjournal.run_journal.Entities.Activities;
 import ru.project.runjournal.run_journal.Entities.Users;
 import ru.project.runjournal.run_journal.Repositories.ActivitiesRepository;
@@ -58,11 +58,11 @@ public class ActivitiesController {
                 activity -> {
                     activityBDList.add(
                         new ActivityBriefData(
-                            ActivityBriefDataProcessor.convertActivityDateToString(activity),
+                            ActivityDataProcessor.convertActivityDateToString(activity),
                             activity.getActivityCaption(),
-                            ActivityBriefDataProcessor.convertActivityTypeToRusString(activity),
-                            ActivityBriefDataProcessor.convertActivityDurationToString(activity.getActivityDuration(),false),
-                            ActivityBriefDataProcessor.convertActivityDistanceToString(activity) + " km",
+                            ActivityDataProcessor.convertActivityTypeToRusString(activity),
+                            ActivityDataProcessor.convertActivityDurationToString(activity.getActivityDuration(),false),
+                            ActivityDataProcessor.convertActivityDistanceToString(activity) + " km",
                             activity.getId()
                         ));
                 });            

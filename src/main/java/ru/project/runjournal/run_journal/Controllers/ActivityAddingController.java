@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import ru.project.runjournal.run_journal.DataProcessing.ActivityInitialDataProcessor;
+import ru.project.runjournal.run_journal.DataProcessing.ActivityDataProcessor;
 import ru.project.runjournal.run_journal.DataProcessing.GpxProcessor;
 import ru.project.runjournal.run_journal.Entities.Activities;
 import ru.project.runjournal.run_journal.Entities.TrackPoints;
@@ -97,14 +97,14 @@ public class ActivityAddingController {
                 List<TrackPoints> trackPointsList = new GpxProcessor().processGPX(activityData.fileGPX);
                 if (trackPointsList != null){
                     // формируем данные для тренировки для сохранения в БД
-                    ActivityInitialDataProcessor dataProc = new ActivityInitialDataProcessor(trackPointsList, activityData.getActivityType());
+                    // ActivityInitialDataProcessor dataProc = new ActivityInitialDataProcessor(trackPointsList, activityData.getActivityType());
                     Activities curActivity = new Activities(
-                        dataProc.getActivityStartTime((byte)0,(byte)0),
+                        ActivityDataProcessor.getActivityStartTime(trackPointsList,(byte)0,(byte)0),
                         activityData.getActivityType(),
-                        dataProc.getActivityCaption((byte)3,(byte)0),
+                        ActivityDataProcessor.getActivityCaption(activityData.getActivityType(),trackPointsList,(byte)3,(byte)0),
                         activityData.getActivityComment(),
-                        dataProc.getActivityDuration(),
-                        dataProc.getActivityDistance(),
+                        ActivityDataProcessor.getActivityDuration(trackPointsList),
+                        ActivityDataProcessor.getActivityDistance(trackPointsList),
                         trackPointsList.get(0).getTrackId(),
                         currentUser.getId(),
                         (byte)3,
