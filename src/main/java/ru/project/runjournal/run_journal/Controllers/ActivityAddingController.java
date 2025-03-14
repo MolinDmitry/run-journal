@@ -90,7 +90,6 @@ public class ActivityAddingController {
      * 
      * @return Возвращает перенаправление на страницу журнала тренировок
      */
-    @SuppressWarnings("unused")
     @PostMapping
     public String processActivityAdding(@AuthenticationPrincipal Users currentUser, ActivityInitialData activityData){
         if (!activityData.fileGPX.isEmpty()){

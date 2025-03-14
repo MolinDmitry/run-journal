@@ -1,0 +1,23 @@
+services:
+  runjournal_app:
+    image: 'molindmitry/run-journal:1.0.0-snapshot'
+    build:
+      context: .
+    container_name: runjournal_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - runjournal_db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://runjournal_db:5432/run_journal_db
+      - SPRING_DATASOURCE_USERNAME=run_journal
+      - SPRING_DATASOURCE_PASSWORD=Yt$L0nG
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+          
+  runjournal_db:
+    image: 'postgres:15.12'
+    container_name: runjournal_db
+    environment:
+      - POSTGRES_USER=run_journal
+      - POSTGRES_PASSWORD=Yt$L0nG
+      - POSTGRES_DB=run_journal_db

@@ -517,7 +517,6 @@ public class ActivityDataProcessor {
                 sumHR+=curHR;
                 numHrSamples++;
             }
-            System.out.println(curPace);
             if (curPace>20 && curPace<800){
                 if (sectorStartTime < 0) sectorStartTime = time;
                 sector+=dl;
