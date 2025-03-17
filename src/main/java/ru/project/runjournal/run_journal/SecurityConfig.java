@@ -89,7 +89,8 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/run-journal")
                 .permitAll()
             )
-            .rememberMe(Customizer.withDefaults());
+            .rememberMe(Customizer.withDefaults())
+    .logout((logout) -> logout.logoutUrl("/run-journal/logout"));
 return http.build();
    }
 
