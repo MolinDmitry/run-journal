@@ -20,7 +20,7 @@ import ru.project.runjournal.run_journal.Repositories.ActivitiesRepository;
 import ru.project.runjournal.run_journal.Repositories.TrackPointsRepository;
 
 @Controller
-@RequestMapping("/activitydetails")
+@RequestMapping("/run-journal/activitydetails")
 public class ActivityDetailsController {
 
     private final ActivitiesRepository activityRepo;
@@ -61,12 +61,12 @@ public class ActivityDetailsController {
                 model.addAttribute("detailDistanceList",ActivityDataProcessor.getDistanceDetails(curTrack));
             }
             else{
-                return "redirect:errorpage?tracknotfounderror";
+                return "redirect:run-journal/errorpage?tracknotfounderror";
             }
             
             
         }
-        else return "redirect:errorpage?activitynotfounderror";
+        else return "redirect:run-journal/errorpage?activitynotfounderror";
 
         
         return "activitydetails";

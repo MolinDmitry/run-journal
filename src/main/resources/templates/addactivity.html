@@ -103,7 +103,7 @@
             ВНИМАНИЕ! Тренировка с таким временем начала уже существует для данного пользователя. Выберите другой файл gpx.
     </td></tr>
         <tr>
-            <td style="text-align: left; border: solid 0px;"><a href="/" class="goToRunJournal"> RunJournal</a><hr></td></tr>
+            <td style="text-align: left; border: solid 0px;"><a href="/run-journal" class="goToRunJournal"> RunJournal</a><hr></td></tr>
         <tr><td style="border: solid 0px;">
             <div class="journalHeader">Новая тренировка</div><hr>
             </td>
@@ -113,7 +113,7 @@
     <table>
         <tr>
             <td>
-                <form enctype="multipart/form-data" method = "POST" th:action = "@{/addactivity}" id = "activityData">
+                <form enctype="multipart/form-data" method = "POST" th:action = "@{/run-journal/addactivity}" id = "activityData">
                     <div class = "fieldLabel">Тип тренировки: </div>
                     <select name = activityType  class ="fieldInput" style = "background: white; height: 30px;">    
                         <option th:each="activityType:${activityTypesList}" th:text="${activityType}">Тип тренировки</option>

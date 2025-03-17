@@ -81,12 +81,12 @@ public class SecurityConfig {
     http
     .authorizeHttpRequests((authorizeHttpRequests) ->
         authorizeHttpRequests
-            .requestMatchers("/login","/register").permitAll()
+            .requestMatchers("/run-journal/login","/run-journal/register").permitAll()
             .anyRequest().authenticated()
     )
     .formLogin(formLogin -> formLogin
-                .loginPage("/login")
-                .defaultSuccessUrl("/")
+                .loginPage("/run-journal/login")
+                .defaultSuccessUrl("/run-journal")
                 .permitAll()
             )
             .rememberMe(Customizer.withDefaults());

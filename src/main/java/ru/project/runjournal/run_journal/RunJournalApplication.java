@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @brief Главный класс приложения
  * 
- * Основная страница открывается по пути "/"
+ * Основная страница открывается по пути "/run-journal"
  */
 @SpringBootApplication
 public class RunJournalApplication {

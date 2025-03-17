@@ -28,7 +28,7 @@ import ru.project.runjournal.run_journal.Repositories.TrackPointsRepository;
 
 @Slf4j
 @Controller
-@RequestMapping("/addactivity")
+@RequestMapping("/run-journal/addactivity")
 public class ActivityAddingController {
 
     private final ActivitiesRepository activitiesRepo;
@@ -116,17 +116,17 @@ public class ActivityAddingController {
                     }
                     else
                     {
-                        return "redirect:addactivity?existingactivityerror";
+                        return "redirect:run-journal/addactivity?existingactivityerror";
                     }
                 }
                 else{
                     log.info("Null trackPointsList is obtained after processing");
-                    return "redirect:addactivity?gpxprocessingerror";
+                    return "redirect:run-journal/addactivity?gpxprocessingerror";
                 }                
             }
         else{
-            return "redirect:addactivity?gpxisnot";
+            return "redirect:run-journal/addactivity?gpxisnot";
         }
-        return "redirect:/";
+        return "redirect:/run-journal";
     }
 }

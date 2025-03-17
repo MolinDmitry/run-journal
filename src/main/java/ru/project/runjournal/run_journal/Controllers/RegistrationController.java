@@ -16,7 +16,7 @@ import ru.project.runjournal.run_journal.Repositories.UsersRepository;
  * 
  */
 @Controller
-@RequestMapping("/register")
+@RequestMapping("/run-journal/register")
 public class RegistrationController {
 
     private final UsersRepository usersRepo;
@@ -54,11 +54,11 @@ public class RegistrationController {
                                     true,
                                     true,
                                     true));        
-            return "redirect:login";
+            return "redirect:run-journal/login";
             }            
         }
         else{
-            return "redirect:register?error_password_check";
+            return "redirect:run-journal/register?error_password_check";
         }
         
         

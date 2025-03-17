@@ -79,7 +79,7 @@
             <td style="width:25%"></td>
             <td style=  "width:50%; padding-left: 15px; padding-right: 15px; background: rgb(246,248,250);
             border: solid 1px silver;">
-                <form method ="POST" th:action="@{/login}">
+                <form method ="POST" th:action="@{/run-journal/login}">
                     <div class = "userLabel">Имя пользователя</div>
                     <input type = "text" name = "username" class ="userInput"> <br>
                     <div class = "userLabel">Пароль</div>
@@ -94,7 +94,7 @@
         <tr>
             <td style="width:25%"></td>
             <td style="width:50%; padding-top: 25px; padding-bottom: 25px;">
-                <div>Не зарегистрированы? <a href="register">Создать аккаунт</a></div>
+                <div>Не зарегистрированы? <a href="/run-journal/register">Создать аккаунт</a></div>
             </td>
             <td style="width:25%"></td>            
         </tr>

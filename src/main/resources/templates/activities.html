@@ -86,7 +86,7 @@
     </div>
     <table>
         <tr>
-            <td style="text-align: right; border: solid 0px;"><a href="addactivity" class="addingActivity"> Добавить тренировку >>></a><hr></td></tr>
+            <td style="text-align: right; border: solid 0px;"><a href="/run-journal/addactivity" class="addingActivity"> Добавить тренировку >>></a><hr></td></tr>
         <tr><td style="border: solid 0px;">
             <div class="journalHeader">Журнал тренировок</div><hr>
             </td>
@@ -111,7 +111,7 @@
         <tr><td colspan="3" class="colorRow"></td></tr>
     </tr>
     <tr><td colspan="3" style="border: solid 0px;">
-        <div style="text-align: right;"><button th:onclick="|window.location.href = 'activitydetails?id=${activity.activityId}'|" class="detailsButton">Подробнее >>></button></div>    
+        <div style="text-align: right;"><button th:onclick="|window.location.href = '/run-journal/activitydetails?id=${activity.activityId}'|" class="detailsButton">Подробнее >>></button></div>    
     </td>
     </tr>
     <tr><td colspan="3" class="colorRow"></td></tr>

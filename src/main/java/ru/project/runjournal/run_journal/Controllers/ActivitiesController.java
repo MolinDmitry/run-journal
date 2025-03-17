@@ -19,7 +19,7 @@ import ru.project.runjournal.run_journal.Entities.Users;
 import ru.project.runjournal.run_journal.Repositories.ActivitiesRepository;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/run-journal")
 public class ActivitiesController {
 
     private final ActivitiesRepository activityRepo;

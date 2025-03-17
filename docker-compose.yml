@@ -1,6 +1,6 @@
 services:
   runjournal_app:
-    image: 'molindmitry/run-journal:1.0.0-snapshot'
+    image: 'molindmitry/run-journal:1.0.1-snapshot'
     build:
       context: .
     container_name: runjournal_app
@@ -21,3 +21,8 @@ services:
       - POSTGRES_USER=run_journal
       - POSTGRES_PASSWORD=Yt$L0nG
       - POSTGRES_DB=run_journal_db
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
