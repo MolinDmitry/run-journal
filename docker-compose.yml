@@ -1,6 +1,6 @@
 services:
   runjournal_app:
-    image: 'molindmitry/run-journal:1.0.2-snapshot'
+    image: 'molindmitry/run-journal:1.0.3-snapshot'
     build:
       context: .
     container_name: runjournal_app
